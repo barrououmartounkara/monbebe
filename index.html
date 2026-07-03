@@ -47,10 +47,20 @@ header::before{content:"⭐"; position:absolute; right:20px; top:10px; font-size
 header::after{content:"👶"; position:absolute; right:30px; bottom:-10px; font-size:5em; opacity:.18;}
 .header-top{display:flex; align-items:center; gap:16px; position:relative; z-index:1;}
 .header-avatar{
-  width:64px; height:64px; background:rgba(255,255,255,0.25); border-radius:50%;
+  width:72px; height:72px; background:rgba(255,255,255,0.25); border-radius:50%;
   display:flex; align-items:center; justify-content:center; font-size:2.2em;
-  border:2px solid rgba(255,255,255,0.5); flex-shrink:0;
+  border:3px solid rgba(255,255,255,0.7); flex-shrink:0; overflow:hidden;
+  cursor:pointer; position:relative; transition:transform .2s;
 }
+.header-avatar:hover{transform:scale(1.05);}
+.header-avatar img{width:100%; height:100%; object-fit:cover; border-radius:50%;}
+.avatar-overlay{
+  position:absolute; inset:0; background:rgba(0,0,0,0.35); border-radius:50%;
+  display:flex; align-items:center; justify-content:center; opacity:0; transition:.2s;
+  font-size:.7em; color:#fff; font-weight:600;
+}
+.header-avatar:hover .avatar-overlay{opacity:1;}
+#avatarInput{display:none;}
 header h1{font-family:'Playfair Display',serif; font-size:1.55em; font-weight:700;}
 header .subtitle{font-size:.88em; opacity:.9; margin-top:3px; font-weight:300;}
 .naissance-info{
@@ -164,6 +174,21 @@ tbody tr:hover{background:#f5fbff;}
 .contact-card a{color:var(--bleu-dark); text-decoration:none; font-weight:600; font-size:.9em;}
 .note-item{border-left:4px solid var(--bleu); padding:11px 15px; background:linear-gradient(90deg,#f0f8fd,#fff); border-radius:0 14px 14px 0; margin-bottom:11px;}
 .note-item .date-n{font-size:.73em; color:var(--gris); margin-bottom:4px; font-weight:500;}
+.note-item img{width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-top:8px;}
+
+/* GALERIE */
+.galerie-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px;}
+.galerie-item{position:relative; border-radius:12px; overflow:hidden; aspect-ratio:1; cursor:pointer;}
+.galerie-item img{width:100%; height:100%; object-fit:cover; transition:transform .3s;}
+.galerie-item:hover img{transform:scale(1.08);}
+.galerie-item .del-btn{position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.5); border:none; color:#fff; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:.75em; display:flex; align-items:center; justify-content:center;}
+.galerie-item .caption{position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.45); color:#fff; font-size:.68em; padding:4px 6px; text-align:center;}
+
+/* MODAL PHOTO */
+.modal-photo{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center; flex-direction:column;}
+.modal-photo.open{display:flex;}
+.modal-photo img{max-width:95vw; max-height:85vh; object-fit:contain; border-radius:12px;}
+.modal-photo .close-modal{position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.2); border:none; color:#fff; font-size:1.5em; width:40px; height:40px; border-radius:50%; cursor:pointer;}
 
 /* CHECKLIST VALISE */
 .checklist-item{display:flex; align-items:center; gap:12px; padding:9px 4px; border-bottom:1px solid #eaf3f8;}
@@ -201,7 +226,12 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
 <!-- HEADER -->
 <header>
   <div class="header-top">
-    <div class="header-avatar">👶</div>
+    <div class="header-avatar" onclick="document.getElementById('avatarInput').click()">
+      <span id="avatarEmoji">👶</span>
+      <img id="avatarImg" src="" style="display:none;">
+      <div class="avatar-overlay">📷</div>
+    </div>
+    <input type="file" id="avatarInput" accept="image/*" onchange="changerAvatar(this)">
     <div>
       <h1>Bébé TOUNKARA</h1>
       <div class="subtitle">Fils de M. & Mme TOUNKARA • <span id="headerAge">…</span></div>
@@ -223,6 +253,7 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
   <button class="tab" data-tab="croissance">📈 Croissance</button>
   <button class="tab" data-tab="vaccins">💉 Vaccins</button>
   <button class="tab" data-tab="contacts">📞 Contacts</button>
+  <button class="tab" data-tab="galerie">📸 Galerie</button>
   <button class="tab" data-tab="journal">📔 Journal</button>
   <button class="tab" data-tab="parametres">⚙️ Paramètres</button>
 </div>
@@ -418,6 +449,31 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
   </div>
 </div>
 
+<!-- ===== GALERIE ===== -->
+<div class="panel" id="galerie">
+  <div class="card">
+    <h2>📸 Ajouter des photos</h2>
+    <p style="font-size:.84em;color:var(--gris);margin-bottom:10px;">Immortalise les moments précieux de ton bébé. Les photos sont stockées sur cet appareil.</p>
+    <label>Légende (optionnel)</label>
+    <input type="text" id="photoCaption" placeholder="Ex: Premier sourire, Premier bain...">
+    <div style="margin-top:12px;">
+      <button class="btn" onclick="document.getElementById('photoInput').click()">📷 Choisir une photo</button>
+      <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="ajouterPhoto(this)">
+    </div>
+  </div>
+  <div class="card">
+    <h2>🖼️ Album de bébé</h2>
+    <div class="galerie-grid" id="galerieGrid"></div>
+    <div class="empty" id="galerieEmpty">Aucune photo pour le moment. Ajoute la première photo de ton bébé !</div>
+  </div>
+</div>
+
+<!-- MODAL AGRANDISSEMENT PHOTO -->
+<div class="modal-photo" id="modalPhoto" onclick="fermerModal()">
+  <button class="close-modal" onclick="fermerModal()">✕</button>
+  <img id="modalImg" src="" alt="">
+</div>
+
 <!-- ===== JOURNAL ===== -->
 <div class="panel" id="journal">
   <div class="card">
@@ -425,6 +481,10 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
     <label>Date</label><input type="date" id="jDate">
     <label>Titre</label><input type="text" id="jTitre" placeholder="Ex: Premier sourire, Premier bain...">
     <label>Note</label><textarea id="jTexte" placeholder="Souvenir, observation, moment marquant..."></textarea>
+    <label>Ajouter une photo (optionnel)</label>
+    <button class="btn secondaire" style="margin-top:6px;" onclick="document.getElementById('jPhotoInput').click()">📷 Choisir une photo</button>
+    <input type="file" id="jPhotoInput" accept="image/*" style="display:none;" onchange="previewJournalPhoto(this)">
+    <img id="jPhotoPreview" src="" style="display:none;width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-top:8px;">
     <button class="btn secondaire" onclick="ajouterJournal()">Enregistrer</button>
   </div>
   <div class="card">
@@ -476,7 +536,8 @@ function defaultData(){
     naissDate:'2026-07-01', naissHeure:'04:30', poidsNaiss:'', tailleNaiss:'',
     tetees:[], sommeils:[], couches:[], croissances:[],
     vaccinsCochet:{}, notesVaccins:[],
-    contacts:[], journal:[]
+    contacts:[], journal:[], galerie:[],
+    avatar:''
   };
 }
 let DATA = loadData();
@@ -767,13 +828,104 @@ function rendreContacts(){
 }
 
 /* ====================================================
-   JOURNAL
+   PHOTO AVATAR
+===================================================== */
+function compresserImage(file, maxW, maxH, qualite, cb){
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      let w=img.width, h=img.height;
+      if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+      if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      cb(cv.toDataURL('image/jpeg', qualite));
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function changerAvatar(input){
+  if(!input.files[0]) return;
+  compresserImage(input.files[0], 300, 300, 0.8, b64 => {
+    DATA.avatar = b64; save(); afficherAvatar();
+  });
+}
+function afficherAvatar(){
+  const img=document.getElementById('avatarImg');
+  const emoji=document.getElementById('avatarEmoji');
+  if(DATA.avatar){
+    img.src=DATA.avatar; img.style.display='block'; emoji.style.display='none';
+  } else {
+    img.style.display='none'; emoji.style.display='block';
+  }
+}
+
+/* ====================================================
+   GALERIE PHOTOS
+===================================================== */
+let jPhotoB64 = '';
+function ajouterPhoto(input){
+  if(!input.files[0]) return;
+  const caption = document.getElementById('photoCaption').value.trim();
+  compresserImage(input.files[0], 1200, 1200, 0.82, b64 => {
+    DATA.galerie.push({id:Date.now(), img:b64, caption, date:todayStr()});
+    save();
+    document.getElementById('photoCaption').value='';
+    input.value='';
+    rendreGalerie();
+  });
+}
+function supprimerPhoto(id){
+  if(!confirm('Supprimer cette photo ?')) return;
+  DATA.galerie=DATA.galerie.filter(p=>p.id!==id); save(); rendreGalerie();
+}
+function rendreGalerie(){
+  const grid=document.getElementById('galerieGrid'); grid.innerHTML='';
+  document.getElementById('galerieEmpty').style.display=DATA.galerie.length?'none':'block';
+  [...DATA.galerie].reverse().forEach(p=>{
+    const div=document.createElement('div'); div.className='galerie-item';
+    div.innerHTML=`<img src="${p.img}" alt="${p.caption||''}" onclick="ouvrirModal('${p.id}')">
+      <button class="del-btn" onclick="event.stopPropagation();supprimerPhoto(${p.id})">✕</button>
+      ${p.caption?`<div class="caption">${p.caption}</div>`:''}`;
+    grid.appendChild(div);
+  });
+}
+function ouvrirModal(id){
+  const p=DATA.galerie.find(x=>x.id==id); if(!p) return;
+  document.getElementById('modalImg').src=p.img;
+  document.getElementById('modalPhoto').classList.add('open');
+}
+function fermerModal(){ document.getElementById('modalPhoto').classList.remove('open'); }
+
+/* ====================================================
+   PHOTO DANS LE JOURNAL
+===================================================== */
+function previewJournalPhoto(input){
+  if(!input.files[0]) return;
+  compresserImage(input.files[0], 1000, 1000, 0.80, b64 => {
+    jPhotoB64 = b64;
+    const prev=document.getElementById('jPhotoPreview');
+    prev.src=b64; prev.style.display='block';
+  });
+}
+
+/* ====================================================
+   JOURNAL (mise à jour avec photo)
 ===================================================== */
 function ajouterJournal(){
   const texte=document.getElementById('jTexte').value.trim();
   if(!texte){alert('Écris quelque chose.');return;}
-  DATA.journal.push({id:Date.now(),date:document.getElementById('jDate').value,titre:document.getElementById('jTitre').value.trim(),texte});
-  save(); document.getElementById('jTitre').value=''; document.getElementById('jTexte').value=''; rendreJournal();
+  DATA.journal.push({id:Date.now(),date:document.getElementById('jDate').value,titre:document.getElementById('jTitre').value.trim(),texte, photo:jPhotoB64});
+  save();
+  document.getElementById('jTitre').value=''; document.getElementById('jTexte').value='';
+  document.getElementById('jPhotoPreview').style.display='none';
+  document.getElementById('jPhotoPreview').src='';
+  document.getElementById('jPhotoInput').value='';
+  jPhotoB64='';
+  rendreJournal();
 }
 function supprimerJournal(id){DATA.journal=DATA.journal.filter(j=>j.id!==id);save();rendreJournal();}
 function rendreJournal(){
@@ -783,7 +935,8 @@ function rendreJournal(){
   items.forEach(j=>{
     const div=document.createElement('div');div.className='note-item';
     div.innerHTML=`<div class="date-n">${j.date?fmtShort(parseDate(j.date)):''} <button class="icon-btn" style="float:right" onclick="supprimerJournal(${j.id})">🗑️</button></div>
-      ${j.titre?'<strong>'+j.titre+'</strong><br>':''}${j.texte.replace(/</g,'&lt;').replace(/\n/g,'<br>')}`;
+      ${j.titre?'<strong>'+j.titre+'</strong><br>':''}${j.texte.replace(/</g,'&lt;').replace(/\n/g,'<br>')}
+      ${j.photo?`<img src="${j.photo}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-top:8px;cursor:pointer;" onclick="document.getElementById('modalImg').src='${j.photo}';document.getElementById('modalPhoto').classList.add('open')">`:'' }`;
     cont.appendChild(div);
   });
 }
@@ -830,7 +983,7 @@ function importerDonnees(){
   const f=document.getElementById('importFile').files[0];
   if(!f){alert('Choisis un fichier .json');return;}
   const r=new FileReader();
-  r.onload=e=>{try{DATA=Object.assign(defaultData(),JSON.parse(e.target.result));save();render();alert('Données importées.');}catch(err){alert('Fichier invalide.');}};
+  r.onload=e=>{try{DATA=Object.assign(defaultData(),JSON.parse(e.target.result));save();render();alert('Données importées.');}catch(err){alert('Fichier invalide.');}};;
   r.readAsText(f);
 }
 function reinitialiser(){
@@ -855,6 +1008,7 @@ function initChamps(){
 function render(){
   initChamps(); majAccueil(); rendreTetees(); rendreSommeils(); rendreCouches();
   rendreCroissance(); rendreVaccins(); rendreNotesVaccins(); rendreContacts(); rendreJournal();
+  rendreGalerie(); afficherAvatar();
 }
 window.addEventListener('resize',()=>{if(document.getElementById('croissance').classList.contains('active'))dessinerGraphique();});
 

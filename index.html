@@ -526,7 +526,10 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
 /* ====================================================
    DONNÉES & STOCKAGE
 ===================================================== */
-const STORE_KEY = 'bebeTOUNKARA_v2';
+/* ====================================================
+   STOCKAGE — localStorage pour données texte, IndexedDB pour photos
+===================================================== */
+const STORE_KEY = 'bebeTOUNKARA_v3';
 function loadData(){
   try{ const r=localStorage.getItem(STORE_KEY); if(r) return JSON.parse(r); }catch(e){}
   return defaultData();
@@ -536,12 +539,65 @@ function defaultData(){
     naissDate:'2026-07-01', naissHeure:'04:30', poidsNaiss:'', tailleNaiss:'',
     tetees:[], sommeils:[], couches:[], croissances:[],
     vaccinsCochet:{}, notesVaccins:[],
-    contacts:[], journal:[], galerie:[],
-    avatar:''
+    contacts:[], journal:[], galerie:[]
   };
 }
 let DATA = loadData();
-function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(DATA)); }catch(e){} }
+function save(){
+  // On enlève les images base64 du DATA avant de sauver dans localStorage
+  const copie = JSON.parse(JSON.stringify(DATA));
+  copie.galerie = copie.galerie.map(p=>({...p, img:''}));
+  copie.journal = copie.journal.map(j=>({...j, photo:''}));
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(copie)); }catch(e){ console.warn('localStorage plein',e); }
+}
+
+/* ====================================================
+   INDEXEDDB — stockage des photos (avatar + galerie + journal)
+===================================================== */
+let DB = null;
+function ouvrirDB(){
+  return new Promise((res,rej)=>{
+    const req = indexedDB.open('bebeTOUNKARA_photos', 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains('photos')) db.createObjectStore('photos');
+    };
+    req.onsuccess = e => { DB = e.target.result; res(DB); };
+    req.onerror = () => rej(req.error);
+  });
+}
+function dbSet(key, val){
+  return new Promise((res,rej)=>{
+    const tx = DB.transaction('photos','readwrite');
+    tx.objectStore('photos').put(val, key);
+    tx.oncomplete = ()=>res();
+    tx.onerror = ()=>rej(tx.error);
+  });
+}
+function dbGet(key){
+  return new Promise((res,rej)=>{
+    const tx = DB.transaction('photos','readonly');
+    const req = tx.objectStore('photos').get(key);
+    req.onsuccess = ()=>res(req.result||null);
+    req.onerror = ()=>rej(req.error);
+  });
+}
+function dbDel(key){
+  return new Promise((res,rej)=>{
+    const tx = DB.transaction('photos','readwrite');
+    tx.objectStore('photos').delete(key);
+    tx.oncomplete = ()=>res();
+    tx.onerror = ()=>rej(tx.error);
+  });
+}
+async function sauverPhotoGalerie(id, b64){ await dbSet('galerie_'+id, b64); }
+async function chargerPhotoGalerie(id){ return await dbGet('galerie_'+id); }
+async function supprimerPhotoGalerie(id){ await dbDel('galerie_'+id); }
+async function sauverAvatar(b64){ await dbSet('avatar', b64); }
+async function chargerAvatar(){ return await dbGet('avatar'); }
+async function sauverPhotoJournal(id, b64){ await dbSet('journal_'+id, b64); }
+async function chargerPhotoJournal(id){ return await dbGet('journal_'+id); }
+async function supprimerPhotoJournal(id){ await dbDel('journal_'+id); }
 
 /* ====================================================
    UTILITAIRES DATES
@@ -849,18 +905,23 @@ function compresserImage(file, maxW, maxH, qualite, cb){
 
 function changerAvatar(input){
   if(!input.files[0]) return;
-  compresserImage(input.files[0], 300, 300, 0.8, b64 => {
-    DATA.avatar = b64; save(); afficherAvatar();
+  compresserImage(input.files[0], 300, 300, 0.75, async b64 => {
+    await sauverAvatar(b64);
+    afficherAvatarImg(b64);
   });
 }
-function afficherAvatar(){
+function afficherAvatarImg(b64){
   const img=document.getElementById('avatarImg');
   const emoji=document.getElementById('avatarEmoji');
-  if(DATA.avatar){
-    img.src=DATA.avatar; img.style.display='block'; emoji.style.display='none';
+  if(b64){
+    img.src=b64; img.style.display='block'; emoji.style.display='none';
   } else {
     img.style.display='none'; emoji.style.display='block';
   }
+}
+async function afficherAvatar(){
+  const b64 = await chargerAvatar();
+  afficherAvatarImg(b64);
 }
 
 /* ====================================================
@@ -870,32 +931,39 @@ let jPhotoB64 = '';
 function ajouterPhoto(input){
   if(!input.files[0]) return;
   const caption = document.getElementById('photoCaption').value.trim();
-  compresserImage(input.files[0], 1200, 1200, 0.82, b64 => {
-    DATA.galerie.push({id:Date.now(), img:b64, caption, date:todayStr()});
+  compresserImage(input.files[0], 800, 800, 0.70, async b64 => {
+    const id = Date.now();
+    DATA.galerie.push({id, caption, date:todayStr()});
     save();
+    await sauverPhotoGalerie(id, b64);
     document.getElementById('photoCaption').value='';
     input.value='';
-    rendreGalerie();
+    await rendreGalerie();
   });
 }
-function supprimerPhoto(id){
+async function supprimerPhoto(id){
   if(!confirm('Supprimer cette photo ?')) return;
-  DATA.galerie=DATA.galerie.filter(p=>p.id!==id); save(); rendreGalerie();
+  DATA.galerie=DATA.galerie.filter(p=>p.id!==id);
+  save();
+  await supprimerPhotoGalerie(id);
+  await rendreGalerie();
 }
-function rendreGalerie(){
+async function rendreGalerie(){
   const grid=document.getElementById('galerieGrid'); grid.innerHTML='';
   document.getElementById('galerieEmpty').style.display=DATA.galerie.length?'none':'block';
-  [...DATA.galerie].reverse().forEach(p=>{
+  const items=[...DATA.galerie].reverse();
+  for(const p of items){
+    const b64 = await chargerPhotoGalerie(p.id);
+    if(!b64) continue;
     const div=document.createElement('div'); div.className='galerie-item';
-    div.innerHTML=`<img src="${p.img}" alt="${p.caption||''}" onclick="ouvrirModal('${p.id}')">
+    div.innerHTML=`<img src="${b64}" alt="${p.caption||''}" onclick="ouvrirModalImg('${b64.replace(/'/g,"\\'")}')">
       <button class="del-btn" onclick="event.stopPropagation();supprimerPhoto(${p.id})">✕</button>
       ${p.caption?`<div class="caption">${p.caption}</div>`:''}`;
     grid.appendChild(div);
-  });
+  }
 }
-function ouvrirModal(id){
-  const p=DATA.galerie.find(x=>x.id==id); if(!p) return;
-  document.getElementById('modalImg').src=p.img;
+function ouvrirModalImg(src){
+  document.getElementById('modalImg').src=src;
   document.getElementById('modalPhoto').classList.add('open');
 }
 function fermerModal(){ document.getElementById('modalPhoto').classList.remove('open'); }
@@ -905,7 +973,7 @@ function fermerModal(){ document.getElementById('modalPhoto').classList.remove('
 ===================================================== */
 function previewJournalPhoto(input){
   if(!input.files[0]) return;
-  compresserImage(input.files[0], 1000, 1000, 0.80, b64 => {
+  compresserImage(input.files[0], 800, 800, 0.70, b64 => {
     jPhotoB64 = b64;
     const prev=document.getElementById('jPhotoPreview');
     prev.src=b64; prev.style.display='block';
@@ -913,32 +981,43 @@ function previewJournalPhoto(input){
 }
 
 /* ====================================================
-   JOURNAL (mise à jour avec photo)
+   JOURNAL (avec IndexedDB pour les photos)
 ===================================================== */
-function ajouterJournal(){
+async function ajouterJournal(){
   const texte=document.getElementById('jTexte').value.trim();
   if(!texte){alert('Écris quelque chose.');return;}
-  DATA.journal.push({id:Date.now(),date:document.getElementById('jDate').value,titre:document.getElementById('jTitre').value.trim(),texte, photo:jPhotoB64});
+  const id = Date.now();
+  const hasPhoto = !!jPhotoB64;
+  DATA.journal.push({id, date:document.getElementById('jDate').value, titre:document.getElementById('jTitre').value.trim(), texte, hasPhoto});
   save();
+  if(hasPhoto) await sauverPhotoJournal(id, jPhotoB64);
   document.getElementById('jTitre').value=''; document.getElementById('jTexte').value='';
   document.getElementById('jPhotoPreview').style.display='none';
   document.getElementById('jPhotoPreview').src='';
   document.getElementById('jPhotoInput').value='';
   jPhotoB64='';
-  rendreJournal();
+  await rendreJournal();
 }
-function supprimerJournal(id){DATA.journal=DATA.journal.filter(j=>j.id!==id);save();rendreJournal();}
-function rendreJournal(){
+async function supprimerJournal(id){
+  DATA.journal=DATA.journal.filter(j=>j.id!==id); save();
+  await supprimerPhotoJournal(id);
+  await rendreJournal();
+}
+async function rendreJournal(){
   const cont=document.getElementById('journalListe'); cont.innerHTML='';
   const items=[...DATA.journal].sort((a,b)=>b.date.localeCompare(a.date));
   document.getElementById('journalEmpty').style.display=items.length?'none':'block';
-  items.forEach(j=>{
-    const div=document.createElement('div');div.className='note-item';
+  for(const j of items){
+    let photoHtml='';
+    if(j.hasPhoto){
+      const b64=await chargerPhotoJournal(j.id);
+      if(b64) photoHtml=`<img src="${b64}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-top:8px;cursor:pointer;" onclick="ouvrirModalImg(this.src)">`;
+    }
+    const div=document.createElement('div'); div.className='note-item';
     div.innerHTML=`<div class="date-n">${j.date?fmtShort(parseDate(j.date)):''} <button class="icon-btn" style="float:right" onclick="supprimerJournal(${j.id})">🗑️</button></div>
-      ${j.titre?'<strong>'+j.titre+'</strong><br>':''}${j.texte.replace(/</g,'&lt;').replace(/\n/g,'<br>')}
-      ${j.photo?`<img src="${j.photo}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-top:8px;cursor:pointer;" onclick="document.getElementById('modalImg').src='${j.photo}';document.getElementById('modalPhoto').classList.add('open')">`:'' }`;
+      ${j.titre?'<strong>'+j.titre+'</strong><br>':''}${j.texte.replace(/</g,'&lt;').replace(/\n/g,'<br>')}${photoHtml}`;
     cont.appendChild(div);
-  });
+  }
 }
 
 /* ====================================================
@@ -1005,14 +1084,18 @@ function initChamps(){
   document.getElementById('pTailleNaiss').value=DATA.tailleNaiss||'';
   document.getElementById('pHeureNaiss').value=DATA.naissHeure||'04:30';
 }
-function render(){
+async function render(){
   initChamps(); majAccueil(); rendreTetees(); rendreSommeils(); rendreCouches();
-  rendreCroissance(); rendreVaccins(); rendreNotesVaccins(); rendreContacts(); rendreJournal();
-  rendreGalerie(); afficherAvatar();
+  rendreCroissance(); rendreVaccins(); rendreNotesVaccins(); rendreContacts();
+  await rendreJournal();
+  await rendreGalerie();
+  await afficherAvatar();
 }
-window.addEventListener('resize',()=>{if(document.getElementById('croissance').classList.contains('active'))dessinerGraphique();});
 
-render();
+window.addEventListener('resize',()=>{ if(document.getElementById('croissance').classList.contains('active')) dessinerGraphique(); });
+
+// Démarrage : ouvrir IndexedDB puis lancer l'app
+ouvrirDB().then(()=>{ render(); }).catch(e=>{ console.error('IndexedDB error',e); render(); });
 
 /* ====================================================
    SERVICE WORKER

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,215 +8,273 @@
 <meta name="theme-color" content="#4a9cbf">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Bébé TOUNKARA">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ============================================================
+   VARIABLES & THÈME
+============================================================ */
 :root{
   --bleu:#5bb3e0; --bleu-dark:#3a87b5; --bleu-light:#e8f5fd;
   --or:#e2b35c; --or-light:#fdf4e3;
   --vert:#6fb88a; --vert-light:#e8f5ee;
   --rose:#e398ae; --lavande:#9b8fd9;
-  --texte:#2d3e50; --gris:#8a9ab0; --blanc:#ffffff;
+  --texte:#2d3e50; --gris:#8a9ab0;
+  --bg:#f5fbff; --bg2:#f0f7fa; --card:#ffffff;
+  --border:rgba(91,179,224,0.12);
   --ombre:0 8px 30px rgba(58,135,181,0.10);
-  --ombre-hov:0 14px 38px rgba(58,135,181,0.18);
+  --ombre-hov:0 14px 38px rgba(58,135,181,0.20);
+}
+[data-theme="dark"]{
+  --texte:#e0ecf8; --gris:#8aa4be;
+  --bg:#0f1923; --bg2:#162233; --card:#1a2d42;
+  --border:rgba(91,179,224,0.18);
+  --ombre:0 8px 30px rgba(0,0,0,0.35);
+  --bleu-light:#1a3a55; --or-light:#2a2010; --vert-light:#102a1a;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{
   font-family:'Poppins',-apple-system,'Segoe UI',sans-serif;
-  background:
-    radial-gradient(circle at 10% 5%, #e8f5fd 0%, transparent 40%),
-    radial-gradient(circle at 90% 0%, #e8f5ee 0%, transparent 40%),
-    linear-gradient(170deg,#f5fbff 0%,#f0f7fa 100%);
-  background-attachment:fixed;
-  color:var(--texte); padding:16px; min-height:100vh; line-height:1.55;
+  background:var(--bg); color:var(--texte);
+  padding:14px; min-height:100vh; line-height:1.55;
+  transition:background .3s,color .3s;
 }
 .container{max-width:960px;margin:0 auto;}
 
-/* HEADER */
+/* ============================================================
+   ANIMATIONS
+============================================================ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+@keyframes shimmer{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+@keyframes starFloat{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-10px) rotate(15deg);}}
+@keyframes heartbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.15);}28%{transform:scale(1);}}
+.animate-fadein{animation:fadeUp .4s ease both;}
+.animate-pulse{animation:pulse 2s infinite;}
+
+/* ============================================================
+   HEADER
+============================================================ */
 header{
-  background:linear-gradient(125deg,#5bb3e0 0%,#3a87b5 45%,#5b9fd9 100%);
-  border-radius:24px; padding:28px 32px; color:#fff; box-shadow:0 8px 32px rgba(58,135,181,0.25);
-  margin-bottom:20px; position:relative; overflow:hidden;
+  background:linear-gradient(125deg,#5bb3e0,#3a87b5 45%,#5b9fd9);
+  border-radius:24px; padding:24px 28px; color:#fff;
+  box-shadow:0 8px 32px rgba(58,135,181,0.30);
+  margin-bottom:18px; position:relative; overflow:hidden;
 }
-header::before{content:"⭐"; position:absolute; right:20px; top:10px; font-size:6em; opacity:.1; transform:rotate(10deg);}
-header::after{content:"👶"; position:absolute; right:30px; bottom:-10px; font-size:5em; opacity:.18;}
-.header-top{display:flex; align-items:center; gap:16px; position:relative; z-index:1;}
+header .star1{position:absolute;right:20px;top:8px;font-size:5em;opacity:.10;animation:starFloat 4s ease-in-out infinite;}
+header .star2{position:absolute;left:8px;bottom:-10px;font-size:4em;opacity:.08;animation:starFloat 5s ease-in-out infinite reverse;}
+.header-top{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
 .header-avatar{
-  width:72px; height:72px; background:rgba(255,255,255,0.25); border-radius:50%;
-  display:flex; align-items:center; justify-content:center; font-size:2.2em;
-  border:3px solid rgba(255,255,255,0.7); flex-shrink:0; overflow:hidden;
-  cursor:pointer; position:relative; transition:transform .2s;
+  width:72px;height:72px;background:rgba(255,255,255,0.22);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:2em;
+  border:3px solid rgba(255,255,255,0.65);flex-shrink:0;overflow:hidden;
+  cursor:pointer;position:relative;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 16px rgba(0,0,0,0.15);
 }
-.header-avatar:hover{transform:scale(1.05);}
-.header-avatar img{width:100%; height:100%; object-fit:cover; border-radius:50%;}
-.avatar-overlay{
-  position:absolute; inset:0; background:rgba(0,0,0,0.35); border-radius:50%;
-  display:flex; align-items:center; justify-content:center; opacity:0; transition:.2s;
-  font-size:.7em; color:#fff; font-weight:600;
-}
+.header-avatar:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(0,0,0,0.25);}
+.header-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.avatar-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.32);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;font-size:.65em;color:#fff;font-weight:600;}
 .header-avatar:hover .avatar-overlay{opacity:1;}
 #avatarInput{display:none;}
-header h1{font-family:'Playfair Display',serif; font-size:1.55em; font-weight:700;}
-header .subtitle{font-size:.88em; opacity:.9; margin-top:3px; font-weight:300;}
-.naissance-info{
-  display:flex; gap:16px; flex-wrap:wrap; margin-top:16px; position:relative; z-index:1;
-}
-.naissance-badge{
-  background:rgba(255,255,255,0.2); border-radius:12px; padding:8px 14px;
-  font-size:.83em; font-weight:500; backdrop-filter:blur(4px);
-}
+header h1{font-family:'Playfair Display',serif;font-size:1.6em;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.15);}
+header .subtitle{font-size:.88em;opacity:.92;margin-top:3px;font-weight:300;}
+.naissance-info{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:1;}
+.naissance-badge{background:rgba(255,255,255,0.18);border-radius:10px;padding:6px 12px;font-size:.8em;font-weight:500;backdrop-filter:blur(4px);}
+.header-actions{position:absolute;top:16px;right:16px;z-index:2;display:flex;gap:8px;}
+.btn-icon{background:rgba(255,255,255,0.2);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.btn-icon:hover{background:rgba(255,255,255,0.35);}
 
-/* TABS */
-.tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; overflow-x:auto; padding-bottom:4px;}
+/* ============================================================
+   TABS
+============================================================ */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;}
 .tab{
-  background:#fff; border:none; padding:10px 15px; border-radius:12px; white-space:nowrap;
-  cursor:pointer; font-size:.84em; color:var(--gris); box-shadow:0 3px 10px rgba(58,135,181,0.07);
-  transition:all .25s ease; font-weight:500; font-family:inherit;
+  background:var(--card);border:none;padding:9px 14px;border-radius:12px;white-space:nowrap;
+  cursor:pointer;font-size:.83em;color:var(--gris);box-shadow:0 3px 10px rgba(58,135,181,0.07);
+  transition:all .22s ease;font-weight:500;font-family:inherit;
 }
-.tab:hover{transform:translateY(-2px); color:var(--bleu-dark);}
-.tab.active{background:linear-gradient(120deg,var(--bleu),var(--bleu-dark)); color:#fff; box-shadow:0 6px 18px rgba(58,135,181,0.35);}
+.tab:hover{transform:translateY(-2px);color:var(--bleu-dark);}
+.tab.active{background:linear-gradient(120deg,var(--bleu),var(--bleu-dark));color:#fff;box-shadow:0 6px 18px rgba(58,135,181,0.38);}
 .panel{display:none;}
-.panel.active{display:block; animation:fade .3s ease;}
-@keyframes fade{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+.panel.active{display:block;animation:fadeUp .35s ease;}
 
-/* CARDS */
+/* ============================================================
+   CARTES
+============================================================ */
 .card{
-  background:#fff; border-radius:20px; padding:22px 24px; box-shadow:var(--ombre);
-  margin-bottom:16px; border:1px solid rgba(91,179,224,0.07); transition:box-shadow .25s;
+  background:var(--card);border-radius:20px;padding:20px 22px;box-shadow:var(--ombre);
+  margin-bottom:14px;border:1px solid var(--border);transition:box-shadow .25s,transform .2s;
 }
 .card:hover{box-shadow:var(--ombre-hov);}
 .card h2{
-  font-family:'Playfair Display',serif; font-size:1.1em; margin-bottom:14px; color:var(--bleu-dark);
-  display:flex; align-items:center; gap:8px; font-weight:600;
+  font-family:'Playfair Display',serif;font-size:1.08em;margin-bottom:12px;color:var(--bleu-dark);
+  display:flex;align-items:center;gap:8px;font-weight:600;
 }
+[data-theme="dark"] .card h2{color:var(--bleu);}
 
-/* GRILLES */
-.grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
-
-/* STAT BOXES */
+/* ============================================================
+   GRILLES & STATS
+============================================================ */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .stat-box{
-  background:linear-gradient(135deg,var(--bleu-light),#eef6fb); border-radius:14px;
-  padding:16px; text-align:center; border:1px solid #d4edf8; transition:transform .2s;
+  background:linear-gradient(135deg,var(--bleu-light),#eef6fb);border-radius:14px;
+  padding:16px;text-align:center;border:1px solid rgba(91,179,224,0.18);
+  transition:transform .2s;cursor:default;
 }
+[data-theme="dark"] .stat-box{background:linear-gradient(135deg,#1a3a55,#162233);}
 .stat-box:hover{transform:translateY(-3px);}
-.stat-box .num{font-family:'Playfair Display',serif; font-size:1.8em; font-weight:700; color:var(--bleu-dark);}
-.stat-box .lbl{font-size:.75em; color:var(--gris); margin-top:3px;}
-.stat-box.or{background:linear-gradient(135deg,var(--or-light),#fcefd4); border-color:#f0dba0;}
+.stat-box .num{font-family:'Playfair Display',serif;font-size:1.8em;font-weight:700;color:var(--bleu-dark);}
+.stat-box .lbl{font-size:.72em;color:var(--gris);margin-top:3px;}
+.stat-box.or{background:linear-gradient(135deg,var(--or-light),#fcefd4);border-color:#f0dba0;}
 .stat-box.or .num{color:#b07c20;}
-.stat-box.vert{background:linear-gradient(135deg,var(--vert-light),#d8f0e4); border-color:#a8d9b8;}
+.stat-box.vert{background:linear-gradient(135deg,var(--vert-light),#d8f0e4);border-color:#a8d9b8;}
 .stat-box.vert .num{color:#3a8a5a;}
 
-/* FORMULAIRES */
-label{display:block; font-size:.79em; color:var(--gris); margin-bottom:4px; margin-top:12px; font-weight:500; letter-spacing:.2px;}
-input,select,textarea{
-  width:100%; padding:10px 13px; border:1.5px solid #cde4f0; border-radius:12px;
-  font-size:.91em; font-family:inherit; background:#fafdff; transition:border-color .2s, box-shadow .2s;
-}
-input:focus,select:focus,textarea:focus{outline:none; border-color:var(--bleu); box-shadow:0 0 0 3px rgba(91,179,224,0.15);}
-textarea{resize:vertical; min-height:60px;}
+/* ============================================================
+   PROGRESS
+============================================================ */
+.progress-wrap{background:#deedf5;border-radius:20px;height:20px;overflow:hidden;margin:10px 0;position:relative;box-shadow:inset 0 1px 4px rgba(0,0,0,0.05);}
+[data-theme="dark"] .progress-wrap{background:#1a3050;}
+.progress-bar{background:linear-gradient(90deg,var(--bleu),var(--or),var(--vert));background-size:200%;height:100%;border-radius:20px;transition:width .7s cubic-bezier(.4,0,.2,1);animation:shimmer 3s linear infinite;}
+.progress-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.72em;font-weight:600;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.2);}
 
-/* BOUTONS */
+/* ============================================================
+   FORMULAIRES
+============================================================ */
+label{display:block;font-size:.79em;color:var(--gris);margin-bottom:4px;margin-top:11px;font-weight:500;letter-spacing:.2px;}
+input,select,textarea{
+  width:100%;padding:10px 13px;border:1.5px solid rgba(91,179,224,0.3);border-radius:12px;
+  font-size:.91em;font-family:inherit;background:var(--card);color:var(--texte);
+  transition:border-color .2s,box-shadow .2s;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--bleu);box-shadow:0 0 0 3px rgba(91,179,224,0.15);}
+textarea{resize:vertical;min-height:60px;}
+[data-theme="dark"] input,[data-theme="dark"] select,[data-theme="dark"] textarea{background:#162233;border-color:rgba(91,179,224,0.2);}
+
+/* ============================================================
+   BOUTONS
+============================================================ */
 button.btn{
-  background:linear-gradient(120deg,var(--bleu),var(--bleu-dark)); color:#fff; border:none;
-  padding:11px 20px; border-radius:12px; cursor:pointer; font-size:.88em; font-weight:600;
-  margin-top:12px; font-family:inherit; transition:transform .2s,box-shadow .2s;
+  background:linear-gradient(120deg,var(--bleu),var(--bleu-dark));color:#fff;border:none;
+  padding:11px 20px;border-radius:12px;cursor:pointer;font-size:.88em;font-weight:600;
+  margin-top:12px;font-family:inherit;transition:transform .2s,box-shadow .2s;
   box-shadow:0 4px 14px rgba(58,135,181,0.30);
 }
-button.btn:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(58,135,181,0.4);}
-button.btn.vert{background:linear-gradient(120deg,var(--vert),#4a9a6a); box-shadow:0 4px 14px rgba(111,184,138,0.3);}
-button.btn.or{background:linear-gradient(120deg,var(--or),#c99a3a); box-shadow:0 4px 14px rgba(226,179,92,0.3);}
+button.btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(58,135,181,0.42);}
+button.btn:active{transform:translateY(0);}
+button.btn.vert{background:linear-gradient(120deg,var(--vert),#4a9a6a);box-shadow:0 4px 14px rgba(111,184,138,0.3);}
+button.btn.or{background:linear-gradient(120deg,var(--or),#c99a3a);box-shadow:0 4px 14px rgba(226,179,92,0.3);}
 button.btn.danger{background:linear-gradient(120deg,#e08a8a,#cc6f6f);}
-button.btn.secondaire{background:linear-gradient(120deg,var(--lavande),#7f72c9); box-shadow:0 4px 14px rgba(155,143,217,0.3);}
+button.btn.secondaire{background:linear-gradient(120deg,var(--lavande),#7f72c9);box-shadow:0 4px 14px rgba(155,143,217,0.3);}
 
-/* TABLEAUX */
-table{width:100%; border-collapse:collapse; margin-top:8px; font-size:.86em;}
-th,td{padding:10px 8px; text-align:left; border-bottom:1px solid #eaf3f8;}
-th{color:var(--gris); font-weight:600; font-size:.77em; text-transform:uppercase; letter-spacing:.5px;}
-tbody tr:hover{background:#f5fbff;}
+/* ============================================================
+   TABLEAUX
+============================================================ */
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.86em;}
+th,td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--border);}
+th{color:var(--gris);font-weight:600;font-size:.76em;text-transform:uppercase;letter-spacing:.5px;}
+tbody tr{transition:background .15s;}
+tbody tr:hover{background:var(--bleu-light);}
+[data-theme="dark"] tbody tr:hover{background:#1a3a55;}
 
-/* BADGES */
-.badge{padding:3px 11px; border-radius:20px; font-size:.72em; font-weight:600;}
-.badge.fait{background:var(--vert-light); color:var(--vert);}
-.badge.avenir{background:#fde8e8; color:#cc6f6f;}
-.badge.allaitement{background:#fdeef5; color:#c06080;}
-.badge.biberon{background:var(--bleu-light); color:var(--bleu-dark);}
+/* ============================================================
+   BADGES
+============================================================ */
+.badge{padding:3px 11px;border-radius:20px;font-size:.72em;font-weight:600;}
+.badge.fait{background:var(--vert-light);color:var(--vert);}
+.badge.avenir{background:#fde8e8;color:#cc6f6f;}
+.badge.allaitement{background:#fdeef5;color:#c06080;}
+.badge.biberon{background:var(--bleu-light);color:var(--bleu-dark);}
 
-/* ELEMENTS UI */
-.empty{color:var(--gris); font-style:italic; font-size:.87em; padding:16px 0; text-align:center;}
-.icon-btn{background:none; border:none; cursor:pointer; font-size:1.05em; opacity:.5; transition:.2s; padding:4px;}
-.icon-btn:hover{opacity:1; transform:scale(1.15);}
-.row-actions{display:flex; gap:4px;}
-
-/* BIG COUNTER */
-.big-counter{text-align:center; padding:10px 0;}
-.big-num{font-family:'Playfair Display',serif; font-size:3.2em; font-weight:700; color:var(--bleu-dark); line-height:1;}
-.counter-btns{display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap;}
-
-/* TIMER */
-.timer-display{font-family:'Playfair Display',serif; font-size:2.5em; font-weight:700; text-align:center; color:var(--bleu); margin:8px 0;}
-
-/* PROGRESS */
-.progress-wrap{background:#deedf5; border-radius:20px; height:20px; overflow:hidden; margin:12px 0; position:relative; box-shadow:inset 0 1px 4px rgba(0,0,0,0.05);}
-.progress-bar{background:linear-gradient(90deg,var(--bleu),var(--or),var(--vert)); background-size:200%; height:100%; border-radius:20px; transition:width .7s cubic-bezier(.4,0,.2,1); animation:shimmer 3s linear infinite;}
-@keyframes shimmer{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
-.progress-label{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.74em; font-weight:600; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.2);}
-
-/* CARTES CONTACT & NOTES */
-.contact-card{display:flex; justify-content:space-between; align-items:center; padding:13px 15px; background:linear-gradient(90deg,#fff,#f0f8fd); border-radius:14px; margin-bottom:10px; border:1px solid #cde4f0;}
-.contact-card .nom{font-weight:600; color:var(--texte);}
-.contact-card .role{font-size:.77em; color:var(--gris);}
-.contact-card a{color:var(--bleu-dark); text-decoration:none; font-weight:600; font-size:.9em;}
-.note-item{border-left:4px solid var(--bleu); padding:11px 15px; background:linear-gradient(90deg,#f0f8fd,#fff); border-radius:0 14px 14px 0; margin-bottom:11px;}
-.note-item .date-n{font-size:.73em; color:var(--gris); margin-bottom:4px; font-weight:500;}
-.note-item img{width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin-top:8px;}
+/* ============================================================
+   DIVERS
+============================================================ */
+.empty{color:var(--gris);font-style:italic;font-size:.87em;padding:16px 0;text-align:center;}
+.icon-btn{background:none;border:none;cursor:pointer;font-size:1.05em;opacity:.5;transition:.2s;padding:4px;}
+.icon-btn:hover{opacity:1;transform:scale(1.15);}
+.row-actions{display:flex;gap:4px;}
+.note-item{border-left:4px solid var(--bleu);padding:11px 15px;background:var(--bg2);border-radius:0 14px 14px 0;margin-bottom:11px;transition:.2s;}
+.note-item:hover{border-left-color:var(--lavande);}
+.note-item .date-n{font-size:.73em;color:var(--gris);margin-bottom:4px;font-weight:500;}
+.note-item img{width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-top:8px;cursor:pointer;}
+.big-counter{text-align:center;padding:10px 0;}
+.big-num{font-family:'Playfair Display',serif;font-size:3.2em;font-weight:700;color:var(--bleu-dark);line-height:1;animation:heartbeat 1.5s ease infinite;}
+.counter-btns{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.timer-display{font-family:'Playfair Display',serif;font-size:2.5em;font-weight:700;text-align:center;color:var(--bleu);margin:8px 0;}
 
 /* GALERIE */
-.galerie-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px;}
-.galerie-item{position:relative; border-radius:12px; overflow:hidden; aspect-ratio:1; cursor:pointer;}
-.galerie-item img{width:100%; height:100%; object-fit:cover; transition:transform .3s;}
-.galerie-item:hover img{transform:scale(1.08);}
-.galerie-item .del-btn{position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.5); border:none; color:#fff; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:.75em; display:flex; align-items:center; justify-content:center;}
-.galerie-item .caption{position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.45); color:#fff; font-size:.68em; padding:4px 6px; text-align:center;}
+.galerie-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.galerie-item{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.12);transition:transform .2s;}
+.galerie-item:hover{transform:scale(1.03);}
+.galerie-item img{width:100%;height:100%;object-fit:cover;}
+.galerie-item .del-btn{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.5);border:none;color:#fff;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:.75em;display:flex;align-items:center;justify-content:center;}
+.galerie-item .caption{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.45);color:#fff;font-size:.68em;padding:4px 6px;text-align:center;}
 
 /* MODAL PHOTO */
-.modal-photo{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center; flex-direction:column;}
-.modal-photo.open{display:flex;}
-.modal-photo img{max-width:95vw; max-height:85vh; object-fit:contain; border-radius:12px;}
-.modal-photo .close-modal{position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.2); border:none; color:#fff; font-size:1.5em; width:40px; height:40px; border-radius:50%; cursor:pointer;}
+.modal-photo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;align-items:center;justify-content:center;flex-direction:column;}
+.modal-photo.open{display:flex;animation:fadeUp .25s ease;}
+.modal-photo img{max-width:95vw;max-height:88vh;object-fit:contain;border-radius:12px;}
+.modal-photo .close-modal{position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:1.4em;width:40px;height:40px;border-radius:50%;cursor:pointer;}
+
+/* VACCINS */
+.vaccin-item{display:flex;align-items:center;gap:12px;padding:11px 13px;background:var(--bg2);border-radius:13px;margin-bottom:7px;border:1px solid var(--border);transition:.2s;}
+.vaccin-item:hover{border-color:var(--bleu);}
+.vaccin-item .statut{font-size:1.3em;}
+.vaccin-item .detail .nom-v{font-weight:600;font-size:.9em;}
+.vaccin-item .detail .age-v{font-size:.76em;color:var(--gris);}
+
+/* CONTACTS */
+.contact-card{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg2);border-radius:13px;margin-bottom:9px;border:1px solid var(--border);}
+.contact-card .nom{font-weight:600;color:var(--texte);}
+.contact-card .role{font-size:.76em;color:var(--gris);}
+.contact-card a{color:var(--bleu-dark);text-decoration:none;font-weight:600;font-size:.88em;}
 
 /* CHECKLIST VALISE */
-.checklist-item{display:flex; align-items:center; gap:12px; padding:9px 4px; border-bottom:1px solid #eaf3f8;}
-.checklist-item input[type=checkbox]{width:auto; accent-color:var(--bleu-dark); transform:scale(1.2); cursor:pointer;}
-.checklist-item span{flex:1; font-size:.91em;}
-.checklist-item.coche span{text-decoration:line-through; color:var(--gris);}
-.checklist-cat{font-weight:600; color:var(--bleu); margin:14px 0 4px; font-size:.82em; text-transform:uppercase; letter-spacing:.5px;}
+.checklist-item{display:flex;align-items:center;gap:12px;padding:9px 4px;border-bottom:1px solid var(--border);}
+.checklist-item input[type=checkbox]{width:auto;accent-color:var(--bleu-dark);transform:scale(1.2);cursor:pointer;}
+.checklist-item span{flex:1;font-size:.9em;}
+.checklist-item.coche span{text-decoration:line-through;color:var(--gris);}
+.checklist-cat{font-weight:600;color:var(--bleu);margin:13px 0 4px;font-size:.81em;text-transform:uppercase;letter-spacing:.5px;}
 
-/* CARTES VACCIN */
-.vaccin-item{display:flex; align-items:center; gap:14px; padding:12px 14px; background:#f5fbff; border-radius:14px; margin-bottom:8px; border:1px solid #cde4f0;}
-.vaccin-item .statut{font-size:1.4em;}
-.vaccin-item .detail .nom-v{font-weight:600; font-size:.92em;}
-.vaccin-item .detail .age-v{font-size:.78em; color:var(--gris);}
+/* ALERTE */
+.alerte{
+  background:linear-gradient(120deg,#fff3e0,#ffe8cc);border-left:4px solid var(--or);
+  border-radius:0 12px 12px 0;padding:10px 14px;margin-bottom:10px;font-size:.86em;
+  animation:fadeUp .3s ease;
+}
+[data-theme="dark"] .alerte{background:linear-gradient(120deg,#2a1f10,#3a2810);}
+.alerte .alerte-titre{font-weight:600;color:#b07c20;margin-bottom:2px;}
 
-/* RAPPORT QUOTIDIEN */
-.rapport-card{background:linear-gradient(135deg,#f0f8fd,#e8f5fd); border-radius:16px; padding:16px 18px; margin-bottom:10px; border:1px solid #cde4f0;}
-.rapport-card .rdate{font-size:.78em; color:var(--gris); font-weight:600; margin-bottom:8px;}
-.rapport-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
-.rapport-mini{text-align:center; background:#fff; border-radius:10px; padding:8px 4px; border:1px solid #dff0f8;}
-.rapport-mini .rnum{font-weight:700; font-size:1.1em; color:var(--bleu-dark);}
-.rapport-mini .rlbl{font-size:.7em; color:var(--gris);}
+/* COURBE OMS */
+.chart-zone{position:relative;height:220px;margin-top:10px;}
+canvas{max-width:100%;display:block;}
 
-footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; padding-bottom:14px; opacity:.8;}
+/* BERCEUSES */
+.berceuse-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg2);border-radius:13px;margin-bottom:8px;border:1px solid var(--border);transition:.2s;}
+.berceuse-item:hover{border-color:var(--lavande);}
+.berceuse-item .b-titre{font-weight:600;font-size:.9em;}
+.berceuse-item .b-durée{font-size:.75em;color:var(--gris);}
+.berceuse-play{background:linear-gradient(120deg,var(--lavande),#7f72c9);border:none;color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s;box-shadow:0 3px 10px rgba(155,143,217,0.35);}
+.berceuse-play:hover{transform:scale(1.1);}
+.berceuse-play.en-cours{animation:pulse 1s infinite;background:linear-gradient(120deg,#e398ae,#c66f8c);}
+#progressBerceuse{width:100%;height:4px;border-radius:4px;accent-color:var(--lavande);margin-top:4px;}
+
+/* RAPPORT PDF */
+.rapport-section{border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;}
+.rapport-section h3{font-size:.95em;color:var(--bleu-dark);margin-bottom:8px;font-weight:600;}
+
+footer{text-align:center;color:var(--gris);font-size:.74em;margin-top:22px;padding-bottom:14px;opacity:.8;}
 @media(max-width:600px){
   .grid2{grid-template-columns:1fr;}
   .grid3{grid-template-columns:1fr 1fr;}
-  .rapport-grid{grid-template-columns:repeat(2,1fr);}
-  .contact-card{flex-direction:column; align-items:flex-start; gap:6px;}
+  .galerie-grid{grid-template-columns:repeat(3,1fr);}
+  .contact-card{flex-direction:column;align-items:flex-start;gap:6px;}
+  .naissance-info{gap:6px;}
 }
 </style>
 </head>
@@ -225,6 +283,12 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
 
 <!-- HEADER -->
 <header>
+  <div class="star1">⭐</div>
+  <div class="star2">🌙</div>
+  <div class="header-actions">
+    <button class="btn-icon" onclick="toggleTheme()" title="Mode nuit">🌙</button>
+    <button class="btn-icon" onclick="afficherAlertes()" title="Alertes">🔔</button>
+  </div>
   <div class="header-top">
     <div class="header-avatar" onclick="document.getElementById('avatarInput').click()">
       <span id="avatarEmoji">👶</span>
@@ -239,8 +303,8 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
   </div>
   <div class="naissance-info">
     <div class="naissance-badge">🗓️ Né le <span id="hNaissDate">…</span> à <span id="hNaissHeure">…</span></div>
-    <div class="naissance-badge">⚖️ Poids : <span id="hPoidsNaiss">—</span></div>
-    <div class="naissance-badge">📏 Taille : <span id="hTailleNaiss">—</span></div>
+    <div class="naissance-badge">⚖️ <span id="hPoidsNaiss">—</span></div>
+    <div class="naissance-badge">📏 <span id="hTailleNaiss">—</span></div>
   </div>
 </header>
 
@@ -252,44 +316,50 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
   <button class="tab" data-tab="couches">🩲 Couches</button>
   <button class="tab" data-tab="croissance">📈 Croissance</button>
   <button class="tab" data-tab="vaccins">💉 Vaccins</button>
-  <button class="tab" data-tab="contacts">📞 Contacts</button>
+  <button class="tab" data-tab="berceuses">🎵 Berceuses</button>
   <button class="tab" data-tab="galerie">📸 Galerie</button>
   <button class="tab" data-tab="journal">📔 Journal</button>
+  <button class="tab" data-tab="contacts">📞 Contacts</button>
   <button class="tab" data-tab="parametres">⚙️ Paramètres</button>
 </div>
 
 <!-- ===== ACCUEIL ===== -->
 <div class="panel active" id="accueil">
-  <div class="card">
+  <div id="alertesZone"></div>
+  <div class="card animate-fadein">
     <h2>📊 Rapport du jour</h2>
     <div class="grid3">
-      <div class="stat-box"><div class="num" id="aujTetees">—</div><div class="lbl">Tétées / biberons</div></div>
-      <div class="stat-box vert"><div class="num" id="aujSommeil">—</div><div class="lbl">h de sommeil</div></div>
-      <div class="stat-box or"><div class="num" id="aujCouches">—</div><div class="lbl">Couches changées</div></div>
+      <div class="stat-box"><div class="num" id="aujTetees">—</div><div class="lbl">Tétées</div></div>
+      <div class="stat-box vert"><div class="num" id="aujSommeil">—</div><div class="lbl">h sommeil</div></div>
+      <div class="stat-box or"><div class="num" id="aujCouches">—</div><div class="lbl">Couches</div></div>
     </div>
   </div>
-  <div class="card">
+  <div class="card animate-fadein">
     <h2>🧡 Développement de bébé</h2>
-    <div id="devInfo" style="background:linear-gradient(135deg,#f0f8fd,#e8f5ee);border-radius:14px;padding:18px;font-size:.9em;border:1px solid #cde4f0;"></div>
+    <div id="devInfo" style="background:var(--bg2);border-radius:13px;padding:16px;font-size:.9em;border:1px solid var(--border);"></div>
   </div>
-  <div class="card">
-    <h2>⏱️ Chronomètre de tétée</h2>
-    <p style="font-size:.84em;color:var(--gris);margin-bottom:6px;">Mesure la durée d'une tétée ou d'un biberon.</p>
+  <div class="card animate-fadein">
+    <h2>⏱️ Chrono tétée</h2>
     <div class="timer-display" id="teteTimer">00:00</div>
     <div class="counter-btns">
       <button class="btn" id="teteChronoBtn" onclick="toggleTeteChro()">▶️ Démarrer</button>
     </div>
   </div>
-  <div class="card">
+  <div class="card animate-fadein">
     <h2>📋 Derniers événements</h2>
     <div id="dernierEvents"></div>
+  </div>
+  <div class="card animate-fadein">
+    <h2>📝 Rapport hebdomadaire</h2>
+    <p style="font-size:.85em;color:var(--gris);margin-bottom:10px;">Génère un résumé de la semaine en PDF.</p>
+    <button class="btn secondaire" onclick="genererRapportPDF()">📄 Générer le rapport PDF</button>
   </div>
 </div>
 
 <!-- ===== TETEES ===== -->
 <div class="panel" id="tetes">
   <div class="card">
-    <h2>➕ Ajouter une tétée / biberon</h2>
+    <h2>➕ Ajouter une tétée</h2>
     <div class="grid2">
       <div><label>Date</label><input type="date" id="tDate"></div>
       <div><label>Heure</label><input type="time" id="tHeure"></div>
@@ -297,20 +367,20 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
     <div class="grid2">
       <div><label>Type</label>
         <select id="tType">
-          <option>Allaitement maternel — sein gauche</option>
-          <option>Allaitement maternel — sein droit</option>
-          <option>Allaitement maternel — les deux</option>
+          <option>Allaitement — sein gauche</option>
+          <option>Allaitement — sein droit</option>
+          <option>Allaitement — les deux</option>
           <option>Biberon</option>
         </select>
       </div>
       <div><label>Durée / Quantité</label><input type="text" id="tDuree" placeholder="ex: 15 min ou 90 ml"></div>
     </div>
-    <label>Notes</label><textarea id="tNotes" placeholder="Observations, comportement de bébé..."></textarea>
+    <label>Notes</label><textarea id="tNotes"></textarea>
     <button class="btn" onclick="ajouterTetee()">Enregistrer</button>
   </div>
   <div class="card">
-    <h2>📋 Historique des tétées</h2>
-    <table id="teteTable"><thead><tr><th>Date</th><th>Heure</th><th>Type</th><th>Durée/Qté</th><th>Notes</th><th></th></tr></thead><tbody></tbody></table>
+    <h2>📋 Historique</h2>
+    <table id="teteTable"><thead><tr><th>Date</th><th>Heure</th><th>Type</th><th>Qté</th><th></th></tr></thead><tbody></tbody></table>
     <div class="empty" id="teteEmpty">Aucune tétée enregistrée.</div>
   </div>
 </div>
@@ -318,22 +388,22 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
 <!-- ===== SOMMEIL ===== -->
 <div class="panel" id="sommeil">
   <div class="card">
-    <h2>➕ Enregistrer une période de sommeil</h2>
+    <h2>➕ Période de sommeil</h2>
     <div class="grid2">
-      <div><label>Date du coucher</label><input type="date" id="sDateD"></div>
-      <div><label>Heure du coucher</label><input type="time" id="sHeureD"></div>
+      <div><label>Date coucher</label><input type="date" id="sDateD"></div>
+      <div><label>Heure coucher</label><input type="time" id="sHeureD"></div>
     </div>
     <div class="grid2">
-      <div><label>Date du réveil</label><input type="date" id="sDateF"></div>
-      <div><label>Heure du réveil</label><input type="time" id="sHeureF"></div>
+      <div><label>Date réveil</label><input type="date" id="sDateF"></div>
+      <div><label>Heure réveil</label><input type="time" id="sHeureF"></div>
     </div>
-    <label>Qualité du sommeil</label>
+    <label>Qualité</label>
     <select id="sQualite"><option>Bonne</option><option>Agitée</option><option>Difficile</option></select>
-    <label>Notes</label><textarea id="sNotes" placeholder="Contexte, pleurs, position..."></textarea>
+    <label>Notes</label><textarea id="sNotes"></textarea>
     <button class="btn" onclick="ajouterSommeil()">Enregistrer</button>
   </div>
   <div class="card">
-    <h2>📋 Historique du sommeil</h2>
+    <h2>📋 Historique</h2>
     <table id="sommeilTable"><thead><tr><th>Coucher</th><th>Réveil</th><th>Durée</th><th>Qualité</th><th></th></tr></thead><tbody></tbody></table>
     <div class="empty" id="sommeilEmpty">Aucune période enregistrée.</div>
   </div>
@@ -342,33 +412,23 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
 <!-- ===== COUCHES ===== -->
 <div class="panel" id="couches">
   <div class="card">
-    <h2>➕ Enregistrer un changement</h2>
+    <h2>➕ Changement de couche</h2>
     <div class="grid2">
       <div><label>Date</label><input type="date" id="cDate"></div>
       <div><label>Heure</label><input type="time" id="cHeure"></div>
     </div>
     <label>Type</label>
-    <select id="cType">
-      <option>Urine uniquement</option>
-      <option>Selle uniquement</option>
-      <option>Urine + Selle</option>
-    </select>
-    <label>Aspect des selles (si concerné)</label>
-    <select id="cAspect">
-      <option>Normal (jaune/moutarde)</option>
-      <option>Vert foncé (méconium)</option>
-      <option>Vert clair</option>
-      <option>Liquide</option>
-      <option>Grumeleuse</option>
-    </select>
-    <label>Notes</label><textarea id="cNotes" placeholder="Rougeurs, irritations..."></textarea>
+    <select id="cType"><option>Urine uniquement</option><option>Selle uniquement</option><option>Urine + Selle</option></select>
+    <label>Aspect selles</label>
+    <select id="cAspect"><option>Normal (jaune/moutarde)</option><option>Vert foncé (méconium)</option><option>Vert clair</option><option>Liquide</option><option>Grumeleuse</option></select>
+    <label>Notes</label><textarea id="cNotes"></textarea>
     <button class="btn vert" onclick="ajouterCouche()">Enregistrer</button>
   </div>
   <div class="card">
     <h2>📊 Aujourd'hui</h2>
     <div class="grid2">
-      <div class="stat-box"><div class="num" id="cAujUrines">—</div><div class="lbl">Couches urine</div></div>
-      <div class="stat-box or"><div class="num" id="cAujSelles">—</div><div class="lbl">Couches selle</div></div>
+      <div class="stat-box"><div class="num" id="cAujUrines">—</div><div class="lbl">Urines</div></div>
+      <div class="stat-box or"><div class="num" id="cAujSelles">—</div><div class="lbl">Selles</div></div>
     </div>
   </div>
   <div class="card">
@@ -381,25 +441,26 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
 <!-- ===== CROISSANCE ===== -->
 <div class="panel" id="croissance">
   <div class="card">
-    <h2>➕ Nouvelle mesure de croissance</h2>
+    <h2>➕ Mesure de croissance</h2>
     <div class="grid2">
       <div><label>Date</label><input type="date" id="crDate"></div>
       <div><label>Poids (kg)</label><input type="number" step="0.01" id="crPoids" placeholder="ex: 3.85"></div>
     </div>
     <div class="grid2">
-      <div><label>Taille (cm)</label><input type="number" step="0.5" id="crTaille" placeholder="ex: 51.5"></div>
-      <div><label>Tour de tête (cm)</label><input type="number" step="0.5" id="crTete" placeholder="ex: 34.5"></div>
+      <div><label>Taille (cm)</label><input type="number" step="0.5" id="crTaille"></div>
+      <div><label>Tour de tête (cm)</label><input type="number" step="0.5" id="crTete"></div>
     </div>
-    <label>Notes</label><textarea id="crNotes" placeholder="Contexte (pesée chez le pédiatre, clinique...)"></textarea>
+    <label>Notes</label><textarea id="crNotes"></textarea>
     <button class="btn" onclick="ajouterCroissance()">Enregistrer</button>
   </div>
   <div class="card">
-    <h2>📈 Courbe de poids</h2>
-    <div style="position:relative;height:200px;margin-top:10px;"><canvas id="poidsChart"></canvas></div>
+    <h2>📈 Courbe de poids + référence OMS garçon</h2>
+    <div class="chart-zone"><canvas id="poidsChart"></canvas></div>
+    <p style="font-size:.75em;color:var(--gris);margin-top:6px;">Zone verte = fourchette OMS normale pour un garçon (P15–P85)</p>
   </div>
   <div class="card">
     <h2>📋 Historique</h2>
-    <table id="croissTable"><thead><tr><th>Date</th><th>Poids</th><th>Taille</th><th>T. tête</th><th>Notes</th><th></th></tr></thead><tbody></tbody></table>
+    <table id="croissTable"><thead><tr><th>Date</th><th>Poids</th><th>Taille</th><th>T.tête</th><th></th></tr></thead><tbody></tbody></table>
     <div class="empty" id="croissEmpty">Aucune mesure enregistrée.</div>
   </div>
 </div>
@@ -408,44 +469,35 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
 <div class="panel" id="vaccins">
   <div class="card">
     <h2>💉 Calendrier vaccinal (Côte d'Ivoire / OMS)</h2>
-    <p style="font-size:.84em;color:var(--gris);margin-bottom:10px;">Coche les vaccins effectués. Consulte toujours ton pédiatre pour les dates exactes.</p>
     <div id="vaccinsListe"></div>
-    <div class="progress-wrap" style="margin-top:16px;"><div class="progress-bar" id="vaccinProg" style="width:0%"></div><div class="progress-label" id="vaccinProgLabel"></div></div>
+    <div class="progress-wrap" style="margin-top:14px;"><div class="progress-bar" id="vaccinProg" style="width:0%"></div><div class="progress-label" id="vaccinProgLabel"></div></div>
   </div>
   <div class="card">
-    <h2>📝 Notes sur un vaccin</h2>
+    <h2>📝 Ajouter une note vaccin</h2>
     <label>Vaccin</label><input type="text" id="vNom" placeholder="Nom du vaccin">
     <div class="grid2">
-      <div><label>Date administrée</label><input type="date" id="vDate"></div>
-      <div><label>Lieu</label><input type="text" id="vLieu" placeholder="ex: CHU de Cocody"></div>
+      <div><label>Date</label><input type="date" id="vDate"></div>
+      <div><label>Lieu</label><input type="text" id="vLieu"></div>
     </div>
-    <label>Réaction observée</label><textarea id="vReaction" placeholder="Fièvre légère, rougeur..."></textarea>
-    <button class="btn" onclick="ajouterNoteVaccin()">Ajouter la note</button>
-    <div style="margin-top:14px;" id="notesVaccinListe"></div>
+    <label>Réaction observée</label><textarea id="vReaction"></textarea>
+    <button class="btn" onclick="ajouterNoteVaccin()">Ajouter</button>
+    <div style="margin-top:12px;" id="notesVaccinListe"></div>
   </div>
 </div>
 
-<!-- ===== CONTACTS ===== -->
-<div class="panel" id="contacts">
+<!-- ===== BERCEUSES ===== -->
+<div class="panel" id="berceuses">
   <div class="card">
-    <h2>➕ Ajouter un contact médical</h2>
-    <div class="grid2">
-      <div><label>Nom</label><input type="text" id="ctNom" placeholder="Dr. ..."></div>
-      <div><label>Rôle</label>
-        <select id="ctRole">
-          <option>Pédiatre</option><option>Gynécologue</option><option>Sage-femme</option>
-          <option>Pharmacie</option><option>Laboratoire</option><option>Hôpital / Clinique</option>
-          <option>Famille proche</option><option>Autre</option>
-        </select>
+    <h2>🎵 Lecteur de berceuses</h2>
+    <p style="font-size:.84em;color:var(--gris);margin-bottom:12px;">Berceuses douces pour endormir bébé. L'audio continue même si tu changes d'onglet.</p>
+    <div id="berceuseEnCours" style="display:none;background:linear-gradient(135deg,var(--lavande-bg,#ece8fb),var(--bg2));border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid rgba(155,143,217,0.3);">
+      <div id="bNomEnCours" style="font-weight:600;margin-bottom:6px;"></div>
+      <input type="range" id="progressBerceuse" value="0" min="0" max="100" style="width:100%;height:4px;accent-color:var(--lavande);" oninput="seekBerceuse(this.value)">
+      <div style="display:flex;justify-content:space-between;font-size:.72em;color:var(--gris);margin-top:2px;">
+        <span id="bTempsActuel">0:00</span><span id="bTempsTotal">0:00</span>
       </div>
     </div>
-    <label>Téléphone</label><input type="tel" id="ctTel" placeholder="+225 ...">
-    <button class="btn" onclick="ajouterContact()">Ajouter</button>
-  </div>
-  <div class="card">
-    <h2>📞 Carnet de contacts</h2>
-    <div id="contactsListe"></div>
-    <div class="empty" id="contactsEmpty">Aucun contact enregistré.</div>
+    <div id="berceusesList"></div>
   </div>
 </div>
 
@@ -453,24 +505,21 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
 <div class="panel" id="galerie">
   <div class="card">
     <h2>📸 Ajouter des photos</h2>
-    <p style="font-size:.84em;color:var(--gris);margin-bottom:10px;">Immortalise les moments précieux de ton bébé. Les photos sont stockées sur cet appareil.</p>
     <label>Légende (optionnel)</label>
     <input type="text" id="photoCaption" placeholder="Ex: Premier sourire, Premier bain...">
-    <div style="margin-top:12px;">
-      <button class="btn" onclick="document.getElementById('photoInput').click()">📷 Choisir une photo</button>
-      <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="ajouterPhoto(this)">
-    </div>
+    <button class="btn" style="margin-top:10px;" onclick="document.getElementById('photoInput').click()">📷 Choisir une photo</button>
+    <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="ajouterPhoto(this)">
   </div>
   <div class="card">
     <h2>🖼️ Album de bébé</h2>
     <div class="galerie-grid" id="galerieGrid"></div>
-    <div class="empty" id="galerieEmpty">Aucune photo pour le moment. Ajoute la première photo de ton bébé !</div>
+    <div class="empty" id="galerieEmpty">Aucune photo pour le moment.</div>
   </div>
 </div>
 
-<!-- MODAL AGRANDISSEMENT PHOTO -->
+<!-- MODAL PHOTO -->
 <div class="modal-photo" id="modalPhoto" onclick="fermerModal()">
-  <button class="close-modal" onclick="fermerModal()">✕</button>
+  <button class="close-modal">✕</button>
   <img id="modalImg" src="" alt="">
 </div>
 
@@ -479,18 +528,38 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
   <div class="card">
     <h2>✍️ Nouvelle note</h2>
     <label>Date</label><input type="date" id="jDate">
-    <label>Titre</label><input type="text" id="jTitre" placeholder="Ex: Premier sourire, Premier bain...">
-    <label>Note</label><textarea id="jTexte" placeholder="Souvenir, observation, moment marquant..."></textarea>
-    <label>Ajouter une photo (optionnel)</label>
-    <button class="btn secondaire" style="margin-top:6px;" onclick="document.getElementById('jPhotoInput').click()">📷 Choisir une photo</button>
+    <label>Titre</label><input type="text" id="jTitre" placeholder="Ex: Premier sourire...">
+    <label>Note</label><textarea id="jTexte"></textarea>
+    <label>Photo (optionnel)</label>
+    <button class="btn secondaire" style="margin-top:6px;" onclick="document.getElementById('jPhotoInput').click()">📷 Choisir</button>
     <input type="file" id="jPhotoInput" accept="image/*" style="display:none;" onchange="previewJournalPhoto(this)">
-    <img id="jPhotoPreview" src="" style="display:none;width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-top:8px;">
+    <img id="jPhotoPreview" src="" style="display:none;width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-top:8px;">
     <button class="btn secondaire" onclick="ajouterJournal()">Enregistrer</button>
   </div>
   <div class="card">
     <h2>📔 Journal de bébé</h2>
     <div id="journalListe"></div>
-    <div class="empty" id="journalEmpty">Aucune note pour le moment.</div>
+    <div class="empty" id="journalEmpty">Aucune note.</div>
+  </div>
+</div>
+
+<!-- ===== CONTACTS ===== -->
+<div class="panel" id="contacts">
+  <div class="card">
+    <h2>➕ Ajouter un contact</h2>
+    <div class="grid2">
+      <div><label>Nom</label><input type="text" id="ctNom"></div>
+      <div><label>Rôle</label>
+        <select id="ctRole"><option>Pédiatre</option><option>Gynécologue</option><option>Sage-femme</option><option>Pharmacie</option><option>Hôpital</option><option>Famille</option><option>Autre</option></select>
+      </div>
+    </div>
+    <label>Téléphone</label><input type="tel" id="ctTel" placeholder="+225 ...">
+    <button class="btn" onclick="ajouterContact()">Ajouter</button>
+  </div>
+  <div class="card">
+    <h2>📞 Carnet de contacts</h2>
+    <div id="contactsListe"></div>
+    <div class="empty" id="contactsEmpty">Aucun contact.</div>
   </div>
 </div>
 
@@ -500,611 +569,513 @@ footer{text-align:center; color:var(--gris); font-size:.75em; margin-top:24px; p
     <h2>⚙️ Informations de naissance</h2>
     <div class="grid2">
       <div><label>Date de naissance</label><input type="date" id="pNaissDate"></div>
-      <div><label>Poids de naissance (kg)</label><input type="number" step="0.01" id="pPoidsNaiss" placeholder="ex: 3.20"></div>
+      <div><label>Heure de naissance</label><input type="time" id="pHeureNaiss"></div>
     </div>
     <div class="grid2">
-      <div><label>Taille de naissance (cm)</label><input type="number" step="0.5" id="pTailleNaiss" placeholder="ex: 50"></div>
-      <div><label>Heure de naissance</label><input type="time" id="pHeureNaiss"></div>
+      <div><label>Poids de naissance (kg)</label><input type="number" step="0.01" id="pPoidsNaiss"></div>
+      <div><label>Taille de naissance (cm)</label><input type="number" step="0.5" id="pTailleNaiss"></div>
     </div>
     <button class="btn" onclick="sauverParametres()">Mettre à jour</button>
   </div>
   <div class="card">
-    <h2>💾 Sauvegarde des données</h2>
-    <p style="font-size:.86em;color:var(--gris);margin-bottom:10px;">Toutes les données sont stockées localement dans ce navigateur. Exporte régulièrement une sauvegarde.</p>
-    <button class="btn secondaire" onclick="exporterDonnees()">⬇️ Exporter les données (.json)</button>
-    <label style="margin-top:14px;">Importer une sauvegarde</label>
+    <h2>📤 Partager avec Mme TOUNKARA</h2>
+    <p style="font-size:.85em;color:var(--gris);margin-bottom:10px;">Exporte les données et envoie le fichier par WhatsApp à Mme TOUNKARA. Elle pourra les importer sur son téléphone.</p>
+    <button class="btn secondaire" onclick="exporterDonnees()">⬇️ Exporter (.json)</button>
+    <label style="margin-top:14px;">Importer les données</label>
     <input type="file" id="importFile" accept=".json">
     <button class="btn secondaire" onclick="importerDonnees()">⬆️ Importer</button>
-    <button class="btn danger" style="margin-top:18px;" onclick="reinitialiser()">🗑️ Réinitialiser toutes les données</button>
+  </div>
+  <div class="card">
+    <button class="btn danger" onclick="reinitialiser()">🗑️ Réinitialiser toutes les données</button>
   </div>
 </div>
 
-<footer>Application de suivi de bébé TOUNKARA — 100 % hors ligne — données protégées sur cet appareil</footer>
+<footer>Bébé TOUNKARA — Application familiale • 100% hors ligne</footer>
 </div>
 
 <script>
-/* ====================================================
-   DONNÉES & STOCKAGE
-===================================================== */
-/* ====================================================
-   STOCKAGE — localStorage pour données texte, IndexedDB pour photos
-===================================================== */
-const STORE_KEY = 'bebeTOUNKARA_v3';
-function loadData(){
-  try{ const r=localStorage.getItem(STORE_KEY); if(r) return JSON.parse(r); }catch(e){}
-  return defaultData();
-}
+/* ============================================================
+   STOCKAGE
+============================================================ */
+const STORE_KEY='bebeTOUNKARA_v4';
 function defaultData(){
-  return {
-    naissDate:'2026-07-01', naissHeure:'04:30', poidsNaiss:'', tailleNaiss:'',
-    tetees:[], sommeils:[], couches:[], croissances:[],
-    vaccinsCochet:{}, notesVaccins:[],
-    contacts:[], journal:[], galerie:[]
-  };
+  return{naissDate:'2026-07-01',naissHeure:'04:30',poidsNaiss:'',tailleNaiss:'',
+    tetees:[],sommeils:[],couches:[],croissances:[],
+    vaccinsCochet:{},notesVaccins:[],contacts:[],journal:[],galerie:[],theme:'light'};
 }
-let DATA = loadData();
+function loadData(){try{const r=localStorage.getItem(STORE_KEY);if(r)return Object.assign(defaultData(),JSON.parse(r));}catch(e){}return defaultData();}
+let DATA=loadData();
 function save(){
-  // On enlève les images base64 du DATA avant de sauver dans localStorage
-  const copie = JSON.parse(JSON.stringify(DATA));
-  copie.galerie = copie.galerie.map(p=>({...p, img:''}));
-  copie.journal = copie.journal.map(j=>({...j, photo:''}));
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify(copie)); }catch(e){ console.warn('localStorage plein',e); }
+  const c=JSON.parse(JSON.stringify(DATA));
+  c.galerie=c.galerie.map(p=>({...p,img:''}));
+  c.journal=c.journal.map(j=>({...j,photo:''}));
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(c));}catch(e){}
 }
 
-/* ====================================================
-   INDEXEDDB — stockage des photos (avatar + galerie + journal)
-===================================================== */
-let DB = null;
+/* ============================================================
+   INDEXEDDB
+============================================================ */
+let DB=null;
 function ouvrirDB(){
   return new Promise((res,rej)=>{
-    const req = indexedDB.open('bebeTOUNKARA_photos', 1);
-    req.onupgradeneeded = e => {
-      const db = e.target.result;
-      if(!db.objectStoreNames.contains('photos')) db.createObjectStore('photos');
-    };
-    req.onsuccess = e => { DB = e.target.result; res(DB); };
-    req.onerror = () => rej(req.error);
+    const req=indexedDB.open('bebeTOUNKARA_photos',1);
+    req.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains('photos'))db.createObjectStore('photos');};
+    req.onsuccess=e=>{DB=e.target.result;res(DB);};
+    req.onerror=()=>rej(req.error);
   });
 }
-function dbSet(key, val){
-  return new Promise((res,rej)=>{
-    const tx = DB.transaction('photos','readwrite');
-    tx.objectStore('photos').put(val, key);
-    tx.oncomplete = ()=>res();
-    tx.onerror = ()=>rej(tx.error);
-  });
-}
-function dbGet(key){
-  return new Promise((res,rej)=>{
-    const tx = DB.transaction('photos','readonly');
-    const req = tx.objectStore('photos').get(key);
-    req.onsuccess = ()=>res(req.result||null);
-    req.onerror = ()=>rej(req.error);
-  });
-}
-function dbDel(key){
-  return new Promise((res,rej)=>{
-    const tx = DB.transaction('photos','readwrite');
-    tx.objectStore('photos').delete(key);
-    tx.oncomplete = ()=>res();
-    tx.onerror = ()=>rej(tx.error);
-  });
-}
-async function sauverPhotoGalerie(id, b64){ await dbSet('galerie_'+id, b64); }
-async function chargerPhotoGalerie(id){ return await dbGet('galerie_'+id); }
-async function supprimerPhotoGalerie(id){ await dbDel('galerie_'+id); }
-async function sauverAvatar(b64){ await dbSet('avatar', b64); }
-async function chargerAvatar(){ return await dbGet('avatar'); }
-async function sauverPhotoJournal(id, b64){ await dbSet('journal_'+id, b64); }
-async function chargerPhotoJournal(id){ return await dbGet('journal_'+id); }
-async function supprimerPhotoJournal(id){ await dbDel('journal_'+id); }
+function dbSet(k,v){return new Promise((res,rej)=>{const tx=DB.transaction('photos','readwrite');tx.objectStore('photos').put(v,k);tx.oncomplete=()=>res();tx.onerror=()=>rej();});}
+function dbGet(k){return new Promise((res,rej)=>{const tx=DB.transaction('photos','readonly');const r=tx.objectStore('photos').get(k);r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej();});}
+function dbDel(k){return new Promise((res,rej)=>{const tx=DB.transaction('photos','readwrite');tx.objectStore('photos').delete(k);tx.oncomplete=()=>res();tx.onerror=()=>rej();});}
 
-/* ====================================================
-   UTILITAIRES DATES
-===================================================== */
-function parseDate(s){ if(!s) return new Date(); const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
-function fmtD(d){ return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}); }
-function fmtShort(d){ return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'}); }
-function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function nowTime(){ const d=new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
-function diffHeures(d1,h1,d2,h2){
-  const a=new Date(d1+'T'+h1+':00'), b=new Date(d2+'T'+h2+':00');
-  return Math.max(0, (b-a)/3600000);
-}
-function ageTexte(dateNaiss){
-  const n=parseDate(dateNaiss), auj=new Date(); auj.setHours(0,0,0,0);
-  const jours=Math.floor((auj-n)/86400000);
-  if(jours<7) return jours+' jour'+(jours>1?'s':'');
-  const semaines=Math.floor(jours/7), joursR=jours%7;
-  if(semaines<4) return semaines+' sem. '+joursR+' j.';
-  const mois=Math.floor(jours/30.44), joursM=Math.floor(jours%30.44);
-  if(mois<24) return mois+' mois '+(joursM>0?joursM+' j':'');
-  return Math.floor(mois/12)+' an'+(Math.floor(mois/12)>1?'s':'')+' '+mois%12+' mois';
+/* ============================================================
+   DATES
+============================================================ */
+function parseDate(s){if(!s)return new Date();const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function fmtD(d){return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});}
+function fmtShort(d){return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function nowTime(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function diffH(d1,h1,d2,h2){const a=new Date(d1+'T'+(h1||'00:00')+':00'),b=new Date(d2+'T'+(h2||'00:00')+':00');return Math.max(0,(b-a)/3600000);}
+function ageTexte(dn){
+  const n=parseDate(dn),auj=new Date();auj.setHours(0,0,0,0);
+  const j=Math.floor((auj-n)/86400000);
+  if(j<7)return j+' jour'+(j>1?'s':'');
+  const s=Math.floor(j/7),jr=j%7;if(s<4)return s+' sem. '+jr+' j';
+  const mo=Math.floor(j/30.44);if(mo<24)return mo+' mois';
+  return Math.floor(mo/12)+' an'+(Math.floor(mo/12)>1?'s':'')+' '+mo%12+' mois';
 }
 
-/* ====================================================
+/* ============================================================
+   THEME NUIT/JOUR
+============================================================ */
+function toggleTheme(){
+  const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  document.querySelector('[onclick="toggleTheme()"]').textContent=t==='dark'?'☀️':'🌙';
+  DATA.theme=t;save();
+}
+
+/* ============================================================
    ONGLETS
-===================================================== */
+============================================================ */
 document.querySelectorAll('.tab').forEach(t=>{
   t.addEventListener('click',()=>{
     document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));
     t.classList.add('active');
     document.getElementById(t.dataset.tab).classList.add('active');
-    if(t.dataset.tab==='croissance') dessinerGraphique();
+    if(t.dataset.tab==='croissance')dessinerGraphique();
+    if(t.dataset.tab==='berceuses')rendreBerceuses();
   });
 });
 
-/* ====================================================
-   HEADER & ACCUEIL
-===================================================== */
-const DEV_SEMAINES = {
-  0:"Nouveau-né : vision limitée à 20-25 cm, reconnaît déjà la voix de sa maman.",
-  1:"1 semaine : regain de poids en cours, beaucoup de sommeil, 8 à 12 tétées/jour.",
-  2:"2 semaines : les traits du visage s'affinent, il commence à fixer les visages.",
-  3:"3 semaines : premiers sourires reflexes, il s'éveille plus souvent.",
-  4:"4 semaines : 1 mois ! Il suit des objets du regard, réagit aux sons.",
-  6:"6 semaines : premiers vrais sourires sociaux, croissance rapide.",
-  8:"2 mois : il gazouille, babille, tient mieux la tête. Vaccins DTP à prévoir.",
-  12:"3 mois : tient sa tête bien droite, s'intéresse à ses mains.",
-  16:"4 mois : il rit aux éclats, saisit les objets. Début de la dentition possible.",
-  20:"5 mois : commence à se retourner, reconnaît ses parents clairement.",
-  24:"6 mois : assise avec soutien, diversification alimentaire recommandée.",
-  36:"9 mois : 4 pattes, premiers mots ('mama', 'dada'). Prudence avec les petits objets.",
-  48:"12 mois : premiers pas possibles, imite beaucoup. Premier anniversaire !",
-};
-function getDevMessage(jours){
-  const s=Math.floor(jours/7);
-  const cles=Object.keys(DEV_SEMAINES).map(Number).sort((a,b)=>b-a);
-  for(const c of cles){ if(s>=c) return DEV_SEMAINES[c]; }
-  return DEV_SEMAINES[0];
+/* ============================================================
+   ALERTES
+============================================================ */
+const VACCINS_CAL=[
+  {id:'bcg',nom:'BCG',age:0},{id:'hep0',nom:'Hépatite B dose 1',age:0},{id:'polio0',nom:'Polio VPO 0',age:0},
+  {id:'penta1',nom:'Pentavalent 1',age:6},{id:'pneu1',nom:'Pneumocoque 1',age:6},{id:'rota1',nom:'Rotavirus 1',age:6},
+  {id:'penta2',nom:'Pentavalent 2',age:10},{id:'pneu2',nom:'Pneumocoque 2',age:10},{id:'rota2',nom:'Rotavirus 2',age:10},
+  {id:'penta3',nom:'Pentavalent 3',age:14},{id:'pneu3',nom:'Pneumocoque 3',age:14},
+  {id:'vita',nom:'Vitamine A',age:26},{id:'rougeole',nom:'Rougeole-Rubéole',age:39},
+  {id:'fj',nom:'Fièvre jaune',age:39},{id:'mr2',nom:'MR 2ème dose',age:65},
+];
+function afficherAlertes(){
+  const zone=document.getElementById('alertesZone');zone.innerHTML='';
+  const n=parseDate(DATA.naissDate),auj=new Date();auj.setHours(0,0,0,0);
+  const ageSemaines=Math.floor((auj-n)/604800000);
+  let count=0;
+  VACCINS_CAL.forEach(v=>{
+    if(DATA.vaccinsCochet[v.id])return;
+    const diff=v.age-ageSemaines;
+    if(diff>=0&&diff<=2){
+      count++;
+      const div=document.createElement('div');div.className='alerte';
+      div.innerHTML=`<div class="alerte-titre">🔔 Vaccin à prévoir</div>${v.nom} — prévu à ${v.age} semaines (dans ${diff===0?'cette semaine':diff+' sem.'})`;
+      zone.appendChild(div);
+    }
+  });
+  if(count===0){const div=document.createElement('div');div.className='alerte';div.style.borderLeftColor='var(--vert)';div.style.background='var(--vert-light)';div.innerHTML='<div class="alerte-titre" style="color:var(--vert)">✅ Tout est à jour !</div>Aucun vaccin urgent dans les 2 prochaines semaines.';zone.appendChild(div);}
 }
+
+/* ============================================================
+   HEADER & ACCUEIL
+============================================================ */
+const DEV={0:"Nouveau-né : vision limitée à 20-25 cm, reconnaît déjà la voix de sa maman.",
+  1:"1 semaine : regain de poids en cours, beaucoup de sommeil, 8 à 12 tétées/jour.",
+  2:"2 semaines : les traits s'affinent, il commence à fixer les visages.",
+  3:"3 semaines : premiers sourires réflexes, il s'éveille plus souvent.",
+  4:"4 semaines : 1 mois ! Il suit des objets du regard.",
+  6:"6 semaines : premiers vrais sourires sociaux.",
+  8:"2 mois : il gazouille, tient mieux la tête. Vaccins DTP à prévoir.",
+  12:"3 mois : tient sa tête bien droite.",
+  16:"4 mois : il rit aux éclats, saisit les objets.",
+  20:"5 mois : commence à se retourner.",
+  24:"6 mois : assise avec soutien, diversification alimentaire.",
+  36:"9 mois : 4 pattes, premiers mots.",
+  48:"12 mois : premiers pas possibles !"};
+function getDevMsg(j){const s=Math.floor(j/7);const cles=Object.keys(DEV).map(Number).sort((a,b)=>b-a);for(const c of cles)if(s>=c)return DEV[c];return DEV[0];}
 function majAccueil(){
   const d=parseDate(DATA.naissDate);
-  const jours=Math.floor((new Date()-d)/86400000);
+  const j=Math.floor((new Date()-d)/86400000);
   document.getElementById('headerAge').textContent='Âge : '+ageTexte(DATA.naissDate);
   document.getElementById('hNaissDate').textContent=fmtD(d);
   document.getElementById('hNaissHeure').textContent=DATA.naissHeure||'04:30';
-  document.getElementById('hPoidsNaiss').textContent=DATA.poidsNaiss?(DATA.poidsNaiss+' kg'):'—';
-  document.getElementById('hTailleNaiss').textContent=DATA.tailleNaiss?(DATA.tailleNaiss+' cm'):'—';
-  document.getElementById('devInfo').innerHTML='<strong>'+ageTexte(DATA.naissDate)+' de vie</strong><br><br>'+getDevMessage(jours);
-  // Rapport du jour
+  document.getElementById('hPoidsNaiss').textContent=DATA.poidsNaiss?'⚖️ '+DATA.poidsNaiss+' kg':'⚖️ —';
+  document.getElementById('hTailleNaiss').textContent=DATA.tailleNaiss?'📏 '+DATA.tailleNaiss+' cm':'📏 —';
+  document.getElementById('devInfo').innerHTML='<strong>'+ageTexte(DATA.naissDate)+' de vie</strong><br><br>'+getDevMsg(j);
   const auj=todayStr();
-  const tAuj=DATA.tetees.filter(x=>x.date===auj).length;
-  const cAuj=DATA.couches.filter(x=>x.date===auj).length;
-  const sAuj=DATA.sommeils.filter(x=>x.dateD===auj||x.dateF===auj)
-    .reduce((acc,s)=>acc+diffHeures(s.dateD,s.heureD,s.dateF,s.heureF),0);
-  document.getElementById('aujTetees').textContent=tAuj;
-  document.getElementById('aujSommeil').textContent=sAuj.toFixed(1);
-  document.getElementById('aujCouches').textContent=cAuj;
-  // Derniers événements
+  const tA=DATA.tetees.filter(x=>x.date===auj).length;
+  const cA=DATA.couches.filter(x=>x.date===auj).length;
+  const sA=DATA.sommeils.filter(x=>x.dateD===auj||x.dateF===auj).reduce((a,s)=>a+diffH(s.dateD,s.heureD,s.dateF||s.dateD,s.heureF),0);
+  document.getElementById('aujTetees').textContent=tA;
+  document.getElementById('aujSommeil').textContent=sA.toFixed(1);
+  document.getElementById('aujCouches').textContent=cA;
   const events=[];
-  [...DATA.tetees].slice(-3).reverse().forEach(e=>events.push({ts:e.date+' '+e.heure,texte:'🍼 '+e.type.split('—')[0].trim()}));
-  [...DATA.sommeils].slice(-2).reverse().forEach(e=>events.push({ts:e.dateF+' '+e.heureF,texte:'😴 Réveil après '+diffHeures(e.dateD,e.heureD,e.dateF,e.heureF).toFixed(1)+'h de sommeil'}));
-  [...DATA.couches].slice(-3).reverse().forEach(e=>events.push({ts:e.date+' '+e.heure,texte:'🩲 Couche changée — '+e.type}));
+  [...DATA.tetees].slice(-3).reverse().forEach(e=>events.push({ts:e.date+' '+e.heure,txt:'🍼 '+e.type.split('—')[0].trim()}));
+  [...DATA.sommeils].slice(-2).reverse().forEach(e=>events.push({ts:e.dateF+' '+e.heureF,txt:'😴 Réveil après '+diffH(e.dateD,e.heureD,e.dateF||e.dateD,e.heureF).toFixed(1)+'h de sommeil'}));
+  [...DATA.couches].slice(-3).reverse().forEach(e=>events.push({ts:e.date+' '+e.heure,txt:'🩲 Couche — '+e.type}));
   events.sort((a,b)=>b.ts.localeCompare(a.ts));
   const cont=document.getElementById('dernierEvents');
-  cont.innerHTML=events.slice(0,5).map(e=>`<div class="note-item"><div class="date-n">${e.ts}</div>${e.texte}</div>`).join('')||'<div class="empty">Aucun événement récent.</div>';
+  cont.innerHTML=events.slice(0,5).map(e=>`<div class="note-item"><div class="date-n">${e.ts}</div>${e.txt}</div>`).join('')||'<div class="empty">Aucun événement récent.</div>';
+  afficherAlertes();
 }
 
-/* ====================================================
+/* ============================================================
    TETEES
-===================================================== */
-function ajouterTetee(){
-  const d=document.getElementById('tDate').value;
-  if(!d){alert('Choisir une date.');return;}
+============================================================ */
+function ajouterTetee(){const d=document.getElementById('tDate').value;if(!d){alert('Date requise');return;}
   DATA.tetees.push({id:Date.now(),date:d,heure:document.getElementById('tHeure').value,type:document.getElementById('tType').value,duree:document.getElementById('tDuree').value,notes:document.getElementById('tNotes').value});
-  save(); document.getElementById('tNotes').value=''; document.getElementById('tDuree').value='';
-  rendreTetees(); majAccueil();
-}
+  save();document.getElementById('tNotes').value='';document.getElementById('tDuree').value='';rendreTetees();majAccueil();}
 function supprimerTetee(id){DATA.tetees=DATA.tetees.filter(x=>x.id!==id);save();rendreTetees();majAccueil();}
 function rendreTetees(){
-  const tbody=document.querySelector('#teteTable tbody'); tbody.innerHTML='';
+  const tbody=document.querySelector('#teteTable tbody');tbody.innerHTML='';
   const items=[...DATA.tetees].sort((a,b)=>(b.date+b.heure).localeCompare(a.date+a.heure));
   document.getElementById('teteEmpty').style.display=items.length?'none':'block';
-  items.forEach(t=>{
-    const tr=document.createElement('tr');
-    const cat=t.type.includes('Biberon')?'biberon':'allaitement';
-    tr.innerHTML=`<td>${fmtShort(parseDate(t.date))}</td><td>${t.heure||'—'}</td><td><span class="badge ${cat}">${t.type.split('—')[0].trim()}</span></td><td>${t.duree||'—'}</td><td>${t.notes||'—'}</td><td class="row-actions"><button class="icon-btn" onclick="supprimerTetee(${t.id})">🗑️</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
+  items.forEach(t=>{const tr=document.createElement('tr');const cat=t.type.includes('Biberon')?'biberon':'allaitement';
+    tr.innerHTML=`<td>${fmtShort(parseDate(t.date))}</td><td>${t.heure||'—'}</td><td><span class="badge ${cat}">${t.type.split('—')[0].trim()}</span></td><td>${t.duree||'—'}</td><td class="row-actions"><button class="icon-btn" onclick="supprimerTetee(${t.id})">🗑️</button></td>`;tbody.appendChild(tr);});}
 
-/* ====================================================
+/* ============================================================
    SOMMEIL
-===================================================== */
-function ajouterSommeil(){
-  const d=document.getElementById('sDateD').value;
-  if(!d){alert('Renseigner la date du coucher.');return;}
+============================================================ */
+function ajouterSommeil(){const d=document.getElementById('sDateD').value;if(!d){alert('Date requise');return;}
   DATA.sommeils.push({id:Date.now(),dateD:d,heureD:document.getElementById('sHeureD').value,dateF:document.getElementById('sDateF').value||d,heureF:document.getElementById('sHeureF').value,qualite:document.getElementById('sQualite').value,notes:document.getElementById('sNotes').value});
-  save(); document.getElementById('sNotes').value=''; rendreSommeils(); majAccueil();
-}
+  save();document.getElementById('sNotes').value='';rendreSommeils();majAccueil();}
 function supprimerSommeil(id){DATA.sommeils=DATA.sommeils.filter(x=>x.id!==id);save();rendreSommeils();majAccueil();}
 function rendreSommeils(){
-  const tbody=document.querySelector('#sommeilTable tbody'); tbody.innerHTML='';
+  const tbody=document.querySelector('#sommeilTable tbody');tbody.innerHTML='';
   const items=[...DATA.sommeils].sort((a,b)=>b.dateD.localeCompare(a.dateD));
   document.getElementById('sommeilEmpty').style.display=items.length?'none':'block';
-  items.forEach(s=>{
-    const h=diffHeures(s.dateD,s.heureD,s.dateF,s.heureF);
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${fmtShort(parseDate(s.dateD))} ${s.heureD}</td><td>${fmtShort(parseDate(s.dateF||s.dateD))} ${s.heureF}</td><td>${h.toFixed(1)}h</td><td>${s.qualite}</td><td class="row-actions"><button class="icon-btn" onclick="supprimerSommeil(${s.id})">🗑️</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
+  items.forEach(s=>{const h=diffH(s.dateD,s.heureD,s.dateF||s.dateD,s.heureF);const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${fmtShort(parseDate(s.dateD))} ${s.heureD}</td><td>${fmtShort(parseDate(s.dateF||s.dateD))} ${s.heureF}</td><td>${h.toFixed(1)}h</td><td>${s.qualite}</td><td class="row-actions"><button class="icon-btn" onclick="supprimerSommeil(${s.id})">🗑️</button></td>`;tbody.appendChild(tr);});}
 
-/* ====================================================
+/* ============================================================
    COUCHES
-===================================================== */
-function ajouterCouche(){
-  const d=document.getElementById('cDate').value;
-  if(!d){alert('Choisir une date.');return;}
+============================================================ */
+function ajouterCouche(){const d=document.getElementById('cDate').value;if(!d){alert('Date requise');return;}
   DATA.couches.push({id:Date.now(),date:d,heure:document.getElementById('cHeure').value,type:document.getElementById('cType').value,aspect:document.getElementById('cAspect').value,notes:document.getElementById('cNotes').value});
-  save(); document.getElementById('cNotes').value=''; rendreCouches(); majAccueil();
-}
+  save();document.getElementById('cNotes').value='';rendreCouches();majAccueil();}
 function supprimerCouche(id){DATA.couches=DATA.couches.filter(x=>x.id!==id);save();rendreCouches();majAccueil();}
 function rendreCouches(){
-  const tbody=document.querySelector('#coucheTable tbody'); tbody.innerHTML='';
+  const tbody=document.querySelector('#coucheTable tbody');tbody.innerHTML='';
   const items=[...DATA.couches].sort((a,b)=>(b.date+b.heure).localeCompare(a.date+a.heure));
   document.getElementById('coucheEmpty').style.display=items.length?'none':'block';
   const auj=todayStr();
-  const urines=DATA.couches.filter(c=>c.date===auj&&c.type.includes('Urine')).length;
-  const selles=DATA.couches.filter(c=>c.date===auj&&c.type.includes('Selle')).length;
-  document.getElementById('cAujUrines').textContent=urines;
-  document.getElementById('cAujSelles').textContent=selles;
-  items.forEach(c=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${fmtShort(parseDate(c.date))}</td><td>${c.heure||'—'}</td><td>${c.type}</td><td>${c.type.includes('Selle')?c.aspect:'—'}</td><td class="row-actions"><button class="icon-btn" onclick="supprimerCouche(${c.id})">🗑️</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
+  document.getElementById('cAujUrines').textContent=DATA.couches.filter(c=>c.date===auj&&c.type.includes('Urine')).length;
+  document.getElementById('cAujSelles').textContent=DATA.couches.filter(c=>c.date===auj&&c.type.includes('Selle')).length;
+  items.forEach(c=>{const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${fmtShort(parseDate(c.date))}</td><td>${c.heure||'—'}</td><td>${c.type}</td><td>${c.type.includes('Selle')?c.aspect:'—'}</td><td class="row-actions"><button class="icon-btn" onclick="supprimerCouche(${c.id})">🗑️</button></td>`;tbody.appendChild(tr);});}
 
-/* ====================================================
-   CROISSANCE
-===================================================== */
-function ajouterCroissance(){
-  const d=document.getElementById('crDate').value;
-  if(!d){alert('Choisir une date.');return;}
+/* ============================================================
+   CROISSANCE + COURBE OMS
+============================================================ */
+// Données OMS poids garçon P15 et P85 (kg) par mois 0-12
+const OMS_P15=[3.3,4.0,5.0,5.7,6.2,6.7,7.1,7.4,7.7,8.0,8.3,8.5,8.8];
+const OMS_P85=[4.4,5.5,6.7,7.5,8.2,8.8,9.3,9.8,10.2,10.5,10.9,11.2,11.5];
+function ajouterCroissance(){const d=document.getElementById('crDate').value;if(!d){alert('Date requise');return;}
   DATA.croissances.push({id:Date.now(),date:d,poids:parseFloat(document.getElementById('crPoids').value)||null,taille:parseFloat(document.getElementById('crTaille').value)||null,tete:parseFloat(document.getElementById('crTete').value)||null,notes:document.getElementById('crNotes').value});
-  save(); document.getElementById('crNotes').value=''; rendreCroissance(); dessinerGraphique();
-}
+  save();document.getElementById('crNotes').value='';rendreCroissance();dessinerGraphique();}
 function supprimerCroissance(id){DATA.croissances=DATA.croissances.filter(x=>x.id!==id);save();rendreCroissance();dessinerGraphique();}
 function rendreCroissance(){
-  const tbody=document.querySelector('#croissTable tbody'); tbody.innerHTML='';
+  const tbody=document.querySelector('#croissTable tbody');tbody.innerHTML='';
   const items=[...DATA.croissances].sort((a,b)=>b.date.localeCompare(a.date));
   document.getElementById('croissEmpty').style.display=items.length?'none':'block';
-  items.forEach(c=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${fmtShort(parseDate(c.date))}</td><td>${c.poids?c.poids+' kg':'—'}</td><td>${c.taille?c.taille+' cm':'—'}</td><td>${c.tete?c.tete+' cm':'—'}</td><td>${c.notes||'—'}</td><td class="row-actions"><button class="icon-btn" onclick="supprimerCroissance(${c.id})">🗑️</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
+  items.forEach(c=>{const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${fmtShort(parseDate(c.date))}</td><td>${c.poids?c.poids+' kg':'—'}</td><td>${c.taille?c.taille+' cm':'—'}</td><td>${c.tete?c.tete+' cm':'—'}</td><td class="row-actions"><button class="icon-btn" onclick="supprimerCroissance(${c.id})">🗑️</button></td>`;tbody.appendChild(tr);});}
 function dessinerGraphique(){
   const cv=document.getElementById('poidsChart');
   const ctx=cv.getContext('2d');
-  const w=cv.width=cv.clientWidth,h=cv.height=200;
+  const w=cv.width=cv.clientWidth,h=cv.height=220;
   ctx.clearRect(0,0,w,h);
-  const pts=[...DATA.croissances].filter(c=>c.poids).sort((a,b)=>a.date.localeCompare(b.date));
-  if(pts.length<2){ctx.fillStyle='#9ab';ctx.font='13px sans-serif';ctx.fillText('Ajoutez au moins 2 mesures de poids pour voir la courbe.',10,h/2);return;}
-  const vals=pts.map(p=>p.poids);
-  const mn=Math.min(...vals)-0.1,mx=Math.max(...vals)+0.1;
-  const pL=38,pB=20,pT=10,pR=10;
-  const SX=(w-pL-pR)/(pts.length-1);
-  const X=i=>pL+i*SX;
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const textColor=isDark?'#8aa4be':'#8a9ab0';
+  const gridColor=isDark?'rgba(255,255,255,0.06)':'#eef5f9';
+  const pL=38,pB=22,pT=12,pR=12;
+  const moisMax=12;
+  const allPoids=[...OMS_P15,...OMS_P85,...DATA.croissances.filter(c=>c.poids).map(c=>c.poids)];
+  const mn=Math.min(...allPoids)-0.2,mx=Math.max(...allPoids)+0.2;
+  const X=m=>pL+(w-pL-pR)*m/moisMax;
   const Y=v=>pT+(h-pT-pB)*(1-(v-mn)/(mx-mn));
-  ctx.strokeStyle='#deedf5';ctx.fillStyle='#9ab';ctx.font='10px sans-serif';
-  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4;const y=Y(v);ctx.beginPath();ctx.moveTo(pL,y);ctx.lineTo(w-pR,y);ctx.stroke();ctx.fillText(v.toFixed(2),2,y+3);}
-  ctx.beginPath();ctx.strokeStyle='#3a87b5';ctx.lineWidth=2.5;
-  pts.forEach((p,i)=>{const x=X(i),y=Y(p.poids);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});
-  ctx.stroke();
-  pts.forEach((p,i)=>{ctx.beginPath();ctx.fillStyle='#5bb3e0';ctx.arc(X(i),Y(p.poids),4,0,7);ctx.fill();});
+  // Grille
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4;const y=Y(v);ctx.strokeStyle=gridColor;ctx.beginPath();ctx.moveTo(pL,y);ctx.lineTo(w-pR,y);ctx.stroke();ctx.fillStyle=textColor;ctx.font='9px sans-serif';ctx.fillText(v.toFixed(1),2,y+3);}
+  // Zone OMS verte
+  ctx.beginPath();
+  for(let m=0;m<=moisMax;m++)m===0?ctx.moveTo(X(m),Y(OMS_P85[m])):ctx.lineTo(X(m),Y(OMS_P85[m]));
+  for(let m=moisMax;m>=0;m--)ctx.lineTo(X(m),Y(OMS_P15[m]));
+  ctx.closePath();ctx.fillStyle='rgba(111,184,138,0.18)';ctx.fill();
+  // Lignes OMS
+  ['#6fb88a','#6fb88a'].forEach((col,idx)=>{
+    const data=idx===0?OMS_P85:OMS_P15;
+    ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.setLineDash([4,3]);ctx.beginPath();
+    data.forEach((v,m)=>m===0?ctx.moveTo(X(m),Y(v)):ctx.lineTo(X(m),Y(v)));ctx.stroke();ctx.setLineDash([]);
+  });
+  // Courbe bébé
+  const pts=[...DATA.croissances].filter(c=>c.poids).sort((a,b)=>a.date.localeCompare(b.date));
+  if(pts.length>=1){
+    const naiss=parseDate(DATA.naissDate);
+    ctx.strokeStyle='#3a87b5';ctx.lineWidth=2.5;ctx.beginPath();
+    pts.forEach((p,i)=>{const moisAge=Math.floor((parseDate(p.date)-naiss)/2628000000);const x=X(Math.min(moisAge,moisMax));const y=Y(p.poids);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});
+    ctx.stroke();
+    pts.forEach(p=>{const moisAge=Math.floor((parseDate(p.date)-parseDate(DATA.naissDate))/2628000000);ctx.fillStyle='#5bb3e0';ctx.beginPath();ctx.arc(X(Math.min(moisAge,moisMax)),Y(p.poids),4,0,7);ctx.fill();});
+  }
+  // Axe X mois
+  ctx.fillStyle=textColor;ctx.font='9px sans-serif';
+  for(let m=0;m<=moisMax;m+=2){ctx.fillText(m+'m',X(m)-6,h-5);}
+  // Légende
+  ctx.fillStyle='#6fb88a';ctx.fillRect(pL,pT,12,8);ctx.fillStyle=textColor;ctx.font='9px sans-serif';ctx.fillText('Zone OMS normale',pL+16,pT+7);
+  ctx.fillStyle='#3a87b5';ctx.fillRect(pL+120,pT,12,8);ctx.fillText('Bébé TOUNKARA',pL+136,pT+7);
 }
 
-/* ====================================================
+/* ============================================================
    VACCINS
-===================================================== */
-const VACCINS_CALENDRIER=[
-  {id:'bcg',nom:'BCG (Tuberculose)',age:'À la naissance'},
-  {id:'hep0',nom:'Hépatite B (1ère dose)',age:'À la naissance'},
-  {id:'polio0',nom:'Polio oral (VPO 0)',age:'À la naissance'},
-  {id:'penta1',nom:'Pentavalent 1 (DTP+HepB+Hib)',age:'6 semaines'},
-  {id:'pneu1',nom:'Pneumocoque (PCV-13) 1',age:'6 semaines'},
-  {id:'rota1',nom:'Rotavirus 1',age:'6 semaines'},
-  {id:'penta2',nom:'Pentavalent 2',age:'10 semaines'},
-  {id:'pneu2',nom:'Pneumocoque 2',age:'10 semaines'},
-  {id:'rota2',nom:'Rotavirus 2',age:'10 semaines'},
-  {id:'penta3',nom:'Pentavalent 3',age:'14 semaines'},
-  {id:'pneu3',nom:'Pneumocoque 3',age:'14 semaines'},
-  {id:'vit_a',nom:'Vitamine A (1ère dose)',age:'6 mois'},
-  {id:'rougeole',nom:'Rougeole-Rubéole (MR)',age:'9 mois'},
-  {id:'fievre_j',nom:'Fièvre jaune',age:'9 mois'},
-  {id:'meningo',nom:'Méningite A (MenAfriVac)',age:'15–18 mois'},
-  {id:'mr2',nom:'MR 2ème dose',age:'15–18 mois'},
-];
+============================================================ */
 function rendreVaccins(){
-  const cont=document.getElementById('vaccinsListe'); cont.innerHTML='';
+  const cont=document.getElementById('vaccinsListe');cont.innerHTML='';
   let done=0;
-  VACCINS_CALENDRIER.forEach(v=>{
-    const coche=!!DATA.vaccinsCochet[v.id];
-    if(coche) done++;
-    const div=document.createElement('div'); div.className='vaccin-item';
+  VACCINS_CAL.forEach(v=>{
+    const coche=!!DATA.vaccinsCochet[v.id];if(coche)done++;
+    const div=document.createElement('div');div.className='vaccin-item';
     div.innerHTML=`<span class="statut">${coche?'✅':'⬜'}</span>
-      <div class="detail"><div class="nom-v">${v.nom}</div><div class="age-v">📅 ${v.age}</div></div>
+      <div class="detail"><div class="nom-v">${v.nom}</div><div class="age-v">📅 Semaine ${v.age}</div></div>
       <input type="checkbox" ${coche?'checked':''} style="width:auto;transform:scale(1.3);accent-color:#3a87b5;cursor:pointer;" onchange="toggleVaccin('${v.id}',this.checked,this.parentElement)">`;
     cont.appendChild(div);
   });
-  const pct=Math.round(done/VACCINS_CALENDRIER.length*100);
+  const pct=Math.round(done/VACCINS_CAL.length*100);
   document.getElementById('vaccinProg').style.width=pct+'%';
-  document.getElementById('vaccinProgLabel').textContent=`${done}/${VACCINS_CALENDRIER.length} vaccins effectués (${pct}%)`;
+  document.getElementById('vaccinProgLabel').textContent=`${done}/${VACCINS_CAL.length} vaccins (${pct}%)`;
 }
-function toggleVaccin(id,val,row){
-  DATA.vaccinsCochet[id]=val; save();
-  row.querySelector('.statut').textContent=val?'✅':'⬜';
-  const pct=Math.round(Object.values(DATA.vaccinsCochet).filter(Boolean).length/VACCINS_CALENDRIER.length*100);
+function toggleVaccin(id,val,row){DATA.vaccinsCochet[id]=val;save();row.querySelector('.statut').textContent=val?'✅':'⬜';
+  const done=Object.values(DATA.vaccinsCochet).filter(Boolean).length;
+  const pct=Math.round(done/VACCINS_CAL.length*100);
   document.getElementById('vaccinProg').style.width=pct+'%';
-  document.getElementById('vaccinProgLabel').textContent=`${Object.values(DATA.vaccinsCochet).filter(Boolean).length}/${VACCINS_CALENDRIER.length} vaccins effectués (${pct}%)`;
-}
-function ajouterNoteVaccin(){
-  const nom=document.getElementById('vNom').value.trim();
-  if(!nom){alert('Nom du vaccin requis.');return;}
+  document.getElementById('vaccinProgLabel').textContent=`${done}/${VACCINS_CAL.length} vaccins (${pct}%)`;}
+function ajouterNoteVaccin(){const nom=document.getElementById('vNom').value.trim();if(!nom){alert('Nom requis');return;}
   DATA.notesVaccins.push({id:Date.now(),nom,date:document.getElementById('vDate').value,lieu:document.getElementById('vLieu').value,reaction:document.getElementById('vReaction').value});
-  save(); document.getElementById('vNom').value=''; document.getElementById('vLieu').value=''; document.getElementById('vReaction').value='';
-  rendreNotesVaccins();
-}
-function rendreNotesVaccins(){
-  const cont=document.getElementById('notesVaccinListe'); cont.innerHTML='';
-  DATA.notesVaccins.forEach(n=>{
-    const div=document.createElement('div');div.className='note-item';
-    div.innerHTML=`<div class="date-n">${n.date?fmtShort(parseDate(n.date)):''} — ${n.lieu||''}
-      <button class="icon-btn" style="float:right" onclick="supprimerNoteVaccin(${n.id})">🗑️</button></div>
-      <strong>${n.nom}</strong>${n.reaction?'<br><small>Réaction : '+n.reaction+'</small>':''}`;
+  save();document.getElementById('vNom').value='';document.getElementById('vLieu').value='';document.getElementById('vReaction').value='';rendreNotesVaccins();}
+function rendreNotesVaccins(){const cont=document.getElementById('notesVaccinListe');cont.innerHTML='';
+  DATA.notesVaccins.forEach(n=>{const div=document.createElement('div');div.className='note-item';
+    div.innerHTML=`<div class="date-n">${n.date||''} — ${n.lieu||''}<button class="icon-btn" style="float:right" onclick="DATA.notesVaccins=DATA.notesVaccins.filter(x=>x.id!==${n.id});save();rendreNotesVaccins()">🗑️</button></div><strong>${n.nom}</strong>${n.reaction?'<br><small>Réaction : '+n.reaction+'</small>':''}`;cont.appendChild(div);});}
+
+/* ============================================================
+   BERCEUSES
+============================================================ */
+const BERCEUSES=[
+  {id:'b1',nom:'Dodo l\'enfant do',url:'https://upload.wikimedia.org/wikipedia/commons/7/71/Dodo_l%27enfant_do.ogg'},
+  {id:'b2',nom:'Twinkle Twinkle Little Star',url:'https://upload.wikimedia.org/wikipedia/commons/6/69/Twinkle_Twinkle_Little_Star_Instrumental.ogg'},
+  {id:'b3',nom:'Au clair de la lune',url:'https://upload.wikimedia.org/wikipedia/commons/5/5a/Au_claire_de_la_lune.ogg'},
+  {id:'b4',nom:'Bruit blanc (pluie douce)',url:'https://upload.wikimedia.org/wikipedia/commons/4/41/Simple_sine_440_Hz.ogg'},
+];
+let audioActuel=null,bIdActuel=null,bInterval=null;
+function rendreBerceuses(){
+  const cont=document.getElementById('berceusesList');cont.innerHTML='';
+  BERCEUSES.forEach(b=>{
+    const div=document.createElement('div');div.className='berceuse-item';
+    const playing=bIdActuel===b.id;
+    div.innerHTML=`<button class="berceuse-play ${playing?'en-cours':''}" id="btn_${b.id}" onclick="jouerBerceuse('${b.id}','${b.url}',this)">${playing?'⏹':'▶️'}</button>
+      <div style="flex:1"><div class="b-titre">${b.nom}</div><div class="b-durée">${playing?'En cours...':'Appuie pour écouter'}</div></div>`;
     cont.appendChild(div);
   });
 }
-function supprimerNoteVaccin(id){DATA.notesVaccins=DATA.notesVaccins.filter(x=>x.id!==id);save();rendreNotesVaccins();}
+function jouerBerceuse(id,url,btn){
+  if(bIdActuel===id){arreterBerceuse();return;}
+  arreterBerceuse();
+  bIdActuel=id;
+  audioActuel=new Audio(url);
+  audioActuel.loop=true;
+  audioActuel.play().catch(()=>{});
+  document.getElementById('berceuseEnCours').style.display='block';
+  document.getElementById('bNomEnCours').textContent=BERCEUSES.find(b=>b.id===id)?.nom||'';
+  bInterval=setInterval(()=>{
+    if(!audioActuel||audioActuel.paused)return;
+    const p=audioActuel.currentTime,t=audioActuel.duration||0;
+    document.getElementById('progressBerceuse').value=t?Math.round(p/t*100):0;
+    document.getElementById('bTempsActuel').textContent=fmtSec(p);
+    document.getElementById('bTempsTotal').textContent=fmtSec(t);
+  },500);
+  rendreBerceuses();
+}
+function arreterBerceuse(){
+  if(audioActuel){audioActuel.pause();audioActuel=null;}
+  if(bInterval)clearInterval(bInterval);
+  bIdActuel=null;
+  document.getElementById('berceuseEnCours').style.display='none';
+  rendreBerceuses();
+}
+function seekBerceuse(v){if(audioActuel&&audioActuel.duration)audioActuel.currentTime=audioActuel.duration*v/100;}
+function fmtSec(s){if(!s||isNaN(s))return'0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
 
-/* ====================================================
-   CONTACTS
-===================================================== */
-function ajouterContact(){
-  const nom=document.getElementById('ctNom').value.trim();
-  if(!nom){alert('Nom requis.');return;}
-  DATA.contacts.push({id:Date.now(),nom,role:document.getElementById('ctRole').value,tel:document.getElementById('ctTel').value.trim()});
-  save(); document.getElementById('ctNom').value=''; document.getElementById('ctTel').value=''; rendreContacts();
-}
-function supprimerContact(id){DATA.contacts=DATA.contacts.filter(c=>c.id!==id);save();rendreContacts();}
-function rendreContacts(){
-  const cont=document.getElementById('contactsListe'); cont.innerHTML='';
-  document.getElementById('contactsEmpty').style.display=DATA.contacts.length?'none':'block';
-  DATA.contacts.forEach(c=>{
-    const div=document.createElement('div');div.className='contact-card';
-    const tel=c.tel?`<a href="tel:${c.tel.replace(/\s/g,'')}">📞 ${c.tel}</a>`:'<span style="color:var(--gris);font-size:.85em;">—</span>';
-    div.innerHTML=`<div><div class="nom">${c.nom}</div><div class="role">${c.role}</div></div>
-      <div style="display:flex;align-items:center;gap:12px;">${tel}<button class="icon-btn" onclick="supprimerContact(${c.id})">🗑️</button></div>`;
-    cont.appendChild(div);
-  });
-}
+/* ============================================================
+   PHOTOS & AVATAR (IndexedDB)
+============================================================ */
+function compresserImage(file,maxW,maxH,qual,cb){
+  const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}const cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);cb(cv.toDataURL('image/jpeg',qual));};img.src=e.target.result;};r.readAsDataURL(file);}
+function changerAvatar(input){if(!input.files[0])return;compresserImage(input.files[0],300,300,0.75,async b64=>{await dbSet('avatar',b64);afficherAvatarImg(b64);});}
+function afficherAvatarImg(b64){const img=document.getElementById('avatarImg'),emoji=document.getElementById('avatarEmoji');if(b64){img.src=b64;img.style.display='block';emoji.style.display='none';}else{img.style.display='none';emoji.style.display='block';}}
+async function afficherAvatar(){const b64=await dbGet('avatar');afficherAvatarImg(b64);}
 
-/* ====================================================
-   PHOTO AVATAR
-===================================================== */
-function compresserImage(file, maxW, maxH, qualite, cb){
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = new Image();
-    img.onload = () => {
-      let w=img.width, h=img.height;
-      if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
-      if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
-      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
-      cv.getContext('2d').drawImage(img,0,0,w,h);
-      cb(cv.toDataURL('image/jpeg', qualite));
-    };
-    img.src=e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function changerAvatar(input){
-  if(!input.files[0]) return;
-  compresserImage(input.files[0], 300, 300, 0.75, async b64 => {
-    await sauverAvatar(b64);
-    afficherAvatarImg(b64);
-  });
-}
-function afficherAvatarImg(b64){
-  const img=document.getElementById('avatarImg');
-  const emoji=document.getElementById('avatarEmoji');
-  if(b64){
-    img.src=b64; img.style.display='block'; emoji.style.display='none';
-  } else {
-    img.style.display='none'; emoji.style.display='block';
-  }
-}
-async function afficherAvatar(){
-  const b64 = await chargerAvatar();
-  afficherAvatarImg(b64);
-}
-
-/* ====================================================
-   GALERIE PHOTOS
-===================================================== */
-let jPhotoB64 = '';
-function ajouterPhoto(input){
-  if(!input.files[0]) return;
-  const caption = document.getElementById('photoCaption').value.trim();
-  compresserImage(input.files[0], 800, 800, 0.70, async b64 => {
-    const id = Date.now();
-    DATA.galerie.push({id, caption, date:todayStr()});
-    save();
-    await sauverPhotoGalerie(id, b64);
-    document.getElementById('photoCaption').value='';
-    input.value='';
-    await rendreGalerie();
-  });
-}
-async function supprimerPhoto(id){
-  if(!confirm('Supprimer cette photo ?')) return;
-  DATA.galerie=DATA.galerie.filter(p=>p.id!==id);
-  save();
-  await supprimerPhotoGalerie(id);
-  await rendreGalerie();
-}
+let jPhotoB64='';
+async function ajouterPhoto(input){if(!input.files[0])return;const cap=document.getElementById('photoCaption').value.trim();compresserImage(input.files[0],800,800,0.70,async b64=>{const id=Date.now();DATA.galerie.push({id,caption:cap,date:todayStr()});save();await dbSet('galerie_'+id,b64);document.getElementById('photoCaption').value='';input.value='';await rendreGalerie();});}
+async function supprimerPhoto(id){if(!confirm('Supprimer ?'))return;DATA.galerie=DATA.galerie.filter(p=>p.id!==id);save();await dbDel('galerie_'+id);await rendreGalerie();}
 async function rendreGalerie(){
-  const grid=document.getElementById('galerieGrid'); grid.innerHTML='';
+  const grid=document.getElementById('galerieGrid');grid.innerHTML='';
   document.getElementById('galerieEmpty').style.display=DATA.galerie.length?'none':'block';
-  const items=[...DATA.galerie].reverse();
-  for(const p of items){
-    const b64 = await chargerPhotoGalerie(p.id);
-    if(!b64) continue;
-    const div=document.createElement('div'); div.className='galerie-item';
-    div.innerHTML=`<img src="${b64}" alt="${p.caption||''}" onclick="ouvrirModalImg('${b64.replace(/'/g,"\\'")}')">
-      <button class="del-btn" onclick="event.stopPropagation();supprimerPhoto(${p.id})">✕</button>
-      ${p.caption?`<div class="caption">${p.caption}</div>`:''}`;
+  for(const p of [...DATA.galerie].reverse()){
+    const b64=await dbGet('galerie_'+p.id);if(!b64)continue;
+    const div=document.createElement('div');div.className='galerie-item';
+    div.innerHTML=`<img src="${b64}" onclick="ouvrirModalImg(this.src)"><button class="del-btn" onclick="event.stopPropagation();supprimerPhoto(${p.id})">✕</button>${p.caption?`<div class="caption">${p.caption}</div>`:''}`;
     grid.appendChild(div);
   }
 }
-function ouvrirModalImg(src){
-  document.getElementById('modalImg').src=src;
-  document.getElementById('modalPhoto').classList.add('open');
-}
-function fermerModal(){ document.getElementById('modalPhoto').classList.remove('open'); }
+function ouvrirModalImg(src){document.getElementById('modalImg').src=src;document.getElementById('modalPhoto').classList.add('open');}
+function fermerModal(){document.getElementById('modalPhoto').classList.remove('open');}
 
-/* ====================================================
-   PHOTO DANS LE JOURNAL
-===================================================== */
-function previewJournalPhoto(input){
-  if(!input.files[0]) return;
-  compresserImage(input.files[0], 800, 800, 0.70, b64 => {
-    jPhotoB64 = b64;
-    const prev=document.getElementById('jPhotoPreview');
-    prev.src=b64; prev.style.display='block';
-  });
-}
-
-/* ====================================================
-   JOURNAL (avec IndexedDB pour les photos)
-===================================================== */
-async function ajouterJournal(){
-  const texte=document.getElementById('jTexte').value.trim();
-  if(!texte){alert('Écris quelque chose.');return;}
-  const id = Date.now();
-  const hasPhoto = !!jPhotoB64;
-  DATA.journal.push({id, date:document.getElementById('jDate').value, titre:document.getElementById('jTitre').value.trim(), texte, hasPhoto});
-  save();
-  if(hasPhoto) await sauverPhotoJournal(id, jPhotoB64);
-  document.getElementById('jTitre').value=''; document.getElementById('jTexte').value='';
-  document.getElementById('jPhotoPreview').style.display='none';
-  document.getElementById('jPhotoPreview').src='';
-  document.getElementById('jPhotoInput').value='';
-  jPhotoB64='';
-  await rendreJournal();
-}
-async function supprimerJournal(id){
-  DATA.journal=DATA.journal.filter(j=>j.id!==id); save();
-  await supprimerPhotoJournal(id);
-  await rendreJournal();
-}
+function previewJournalPhoto(input){if(!input.files[0])return;compresserImage(input.files[0],800,800,0.70,b64=>{jPhotoB64=b64;const p=document.getElementById('jPhotoPreview');p.src=b64;p.style.display='block';});}
+async function ajouterJournal(){const texte=document.getElementById('jTexte').value.trim();if(!texte){alert('Écris quelque chose.');return;}
+  const id=Date.now();const hasPhoto=!!jPhotoB64;
+  DATA.journal.push({id,date:document.getElementById('jDate').value,titre:document.getElementById('jTitre').value.trim(),texte,hasPhoto});
+  save();if(hasPhoto)await dbSet('journal_'+id,jPhotoB64);
+  document.getElementById('jTitre').value='';document.getElementById('jTexte').value='';
+  document.getElementById('jPhotoPreview').style.display='none';document.getElementById('jPhotoInput').value='';jPhotoB64='';
+  await rendreJournal();}
+async function supprimerJournal(id){DATA.journal=DATA.journal.filter(j=>j.id!==id);save();await dbDel('journal_'+id);await rendreJournal();}
 async function rendreJournal(){
-  const cont=document.getElementById('journalListe'); cont.innerHTML='';
+  const cont=document.getElementById('journalListe');cont.innerHTML='';
   const items=[...DATA.journal].sort((a,b)=>b.date.localeCompare(a.date));
   document.getElementById('journalEmpty').style.display=items.length?'none':'block';
   for(const j of items){
-    let photoHtml='';
-    if(j.hasPhoto){
-      const b64=await chargerPhotoJournal(j.id);
-      if(b64) photoHtml=`<img src="${b64}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-top:8px;cursor:pointer;" onclick="ouvrirModalImg(this.src)">`;
-    }
-    const div=document.createElement('div'); div.className='note-item';
-    div.innerHTML=`<div class="date-n">${j.date?fmtShort(parseDate(j.date)):''} <button class="icon-btn" style="float:right" onclick="supprimerJournal(${j.id})">🗑️</button></div>
-      ${j.titre?'<strong>'+j.titre+'</strong><br>':''}${j.texte.replace(/</g,'&lt;').replace(/\n/g,'<br>')}${photoHtml}`;
-    cont.appendChild(div);
-  }
+    let ph='';if(j.hasPhoto){const b64=await dbGet('journal_'+j.id);if(b64)ph=`<img src="${b64}" onclick="ouvrirModalImg(this.src)">`;}
+    const div=document.createElement('div');div.className='note-item';
+    div.innerHTML=`<div class="date-n">${j.date?fmtShort(parseDate(j.date)):''}<button class="icon-btn" style="float:right" onclick="supprimerJournal(${j.id})">🗑️</button></div>${j.titre?'<strong>'+j.titre+'</strong><br>':''}${j.texte.replace(/</g,'&lt;').replace(/\n/g,'<br>')}${ph}`;
+    cont.appendChild(div);}
 }
 
-/* ====================================================
-   CHRONO TETEE (Accueil)
-===================================================== */
-let teteChroEn=null, teteChroInt=null;
-function toggleTeteChro(){
-  const btn=document.getElementById('teteChronoBtn');
-  if(!teteChroEn){
-    teteChroEn=Date.now(); btn.textContent='⏹️ Arrêter';
-    teteChroInt=setInterval(()=>{
-      const s=Math.floor((Date.now()-teteChroEn)/1000);
-      document.getElementById('teteTimer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
-    },1000);
-  } else {
-    clearInterval(teteChroInt);
-    const s=Math.floor((Date.now()-teteChroEn)/1000);
-    document.getElementById('teteTimer').textContent='00:00'; teteChroEn=null;
-    btn.textContent='▶️ Démarrer';
-    const min=Math.floor(s/60),sec=s%60;
-    const dureeStr=min>0?(min+'min '+(sec>0?sec+'s':'')):(sec+'s');
-    alert('Tétée terminée : '+dureeStr+'\nVeux-tu l\'enregistrer ? Clique sur l\'onglet 🍼 Tétées pour la saisir.');
-  }
-}
+/* ============================================================
+   CONTACTS
+============================================================ */
+function ajouterContact(){const nom=document.getElementById('ctNom').value.trim();if(!nom){alert('Nom requis');return;}
+  DATA.contacts.push({id:Date.now(),nom,role:document.getElementById('ctRole').value,tel:document.getElementById('ctTel').value.trim()});
+  save();document.getElementById('ctNom').value='';document.getElementById('ctTel').value='';rendreContacts();}
+function supprimerContact(id){DATA.contacts=DATA.contacts.filter(c=>c.id!==id);save();rendreContacts();}
+function rendreContacts(){
+  const cont=document.getElementById('contactsListe');cont.innerHTML='';
+  document.getElementById('contactsEmpty').style.display=DATA.contacts.length?'none':'block';
+  DATA.contacts.forEach(c=>{const div=document.createElement('div');div.className='contact-card';
+    const tel=c.tel?`<a href="tel:${c.tel.replace(/\s/g,'')}">📞 ${c.tel}</a>`:'<span style="color:var(--gris)">—</span>';
+    div.innerHTML=`<div><div class="nom">${c.nom}</div><div class="role">${c.role}</div></div><div style="display:flex;align-items:center;gap:10px;">${tel}<button class="icon-btn" onclick="supprimerContact(${c.id})">🗑️</button></div>`;
+    cont.appendChild(div);});}
 
-/* ====================================================
+/* ============================================================
    PARAMETRES
-===================================================== */
+============================================================ */
 function sauverParametres(){
   DATA.naissDate=document.getElementById('pNaissDate').value||DATA.naissDate;
   DATA.naissHeure=document.getElementById('pHeureNaiss').value;
   DATA.poidsNaiss=document.getElementById('pPoidsNaiss').value;
   DATA.tailleNaiss=document.getElementById('pTailleNaiss').value;
-  save(); majAccueil(); alert('Informations de naissance mises à jour.');
-}
-function exporterDonnees(){
-  const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='bebe_TOUNKARA_'+todayStr()+'.json';a.click();URL.revokeObjectURL(url);
-}
-function importerDonnees(){
-  const f=document.getElementById('importFile').files[0];
-  if(!f){alert('Choisis un fichier .json');return;}
-  const r=new FileReader();
-  r.onload=e=>{try{DATA=Object.assign(defaultData(),JSON.parse(e.target.result));save();render();alert('Données importées.');}catch(err){alert('Fichier invalide.');}};;
-  r.readAsText(f);
-}
-function reinitialiser(){
-  if(confirm('Supprimer TOUTES les données ? Action irréversible.')){DATA=defaultData();save();render();}
+  save();majAccueil();alert('✅ Mis à jour !');}
+function exporterDonnees(){const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='bebe_TOUNKARA_'+todayStr()+'.json';a.click();URL.revokeObjectURL(url);}
+function importerDonnees(){const f=document.getElementById('importFile').files[0];if(!f){alert('Choisis un fichier');return;}
+  const r=new FileReader();r.onload=e=>{try{DATA=Object.assign(defaultData(),JSON.parse(e.target.result));save();render();alert('✅ Données importées !');}catch(err){alert('Fichier invalide');}};r.readAsText(f);}
+function reinitialiser(){if(confirm('Supprimer TOUTES les données ?')){DATA=defaultData();save();render();}}
+
+/* ============================================================
+   RAPPORT PDF
+============================================================ */
+function genererRapportPDF(){
+  const d=new Date(),semaine=todayStr();
+  const il7j=new Date(d);il7j.setDate(d.getDate()-7);
+  const debut=il7j.toISOString().split('T')[0];
+  const tSem=DATA.tetees.filter(t=>t.date>=debut).length;
+  const cSem=DATA.couches.filter(c=>c.date>=debut).length;
+  const sSem=DATA.sommeils.filter(s=>s.dateD>=debut||s.dateF>=debut).reduce((a,s)=>a+diffH(s.dateD,s.heureD,s.dateF||s.dateD,s.heureF),0);
+  const dernierPoids=DATA.croissances.filter(c=>c.poids).sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+    body{font-family:Arial,sans-serif;padding:30px;color:#2d3e50;}
+    h1{color:#3a87b5;border-bottom:2px solid #3a87b5;padding-bottom:10px;}
+    h2{color:#5bb3e0;margin-top:20px;}
+    .stat{display:inline-block;background:#e8f5fd;border-radius:10px;padding:10px 20px;margin:6px;text-align:center;}
+    .stat .n{font-size:2em;font-weight:bold;color:#3a87b5;}
+    .stat .l{font-size:.8em;color:#888;}
+    table{width:100%;border-collapse:collapse;margin-top:10px;}
+    th,td{border:1px solid #ddd;padding:8px;text-align:left;}
+    th{background:#e8f5fd;}
+  </style></head><body>
+    <h1>👶 Rapport hebdomadaire — Bébé TOUNKARA</h1>
+    <p>Semaine du ${fmtD(il7j)} au ${fmtD(d)}</p>
+    <p>Âge : ${ageTexte(DATA.naissDate)}</p>
+    <h2>📊 Résumé de la semaine</h2>
+    <div class="stat"><div class="n">${tSem}</div><div class="l">Tétées</div></div>
+    <div class="stat"><div class="n">${cSem}</div><div class="l">Couches</div></div>
+    <div class="stat"><div class="n">${sSem.toFixed(1)}h</div><div class="l">Sommeil total</div></div>
+    ${dernierPoids?`<div class="stat"><div class="n">${dernierPoids.poids} kg</div><div class="l">Dernier poids</div></div>`:''}
+    <h2>🍼 Tétées de la semaine</h2>
+    <table><tr><th>Date</th><th>Heure</th><th>Type</th><th>Quantité</th></tr>
+    ${DATA.tetees.filter(t=>t.date>=debut).map(t=>`<tr><td>${t.date}</td><td>${t.heure||'—'}</td><td>${t.type}</td><td>${t.duree||'—'}</td></tr>`).join('')}
+    </table>
+    <h2>😴 Sommeil de la semaine</h2>
+    <table><tr><th>Coucher</th><th>Réveil</th><th>Durée</th><th>Qualité</th></tr>
+    ${DATA.sommeils.filter(s=>s.dateD>=debut).map(s=>`<tr><td>${s.dateD} ${s.heureD}</td><td>${s.dateF||s.dateD} ${s.heureF}</td><td>${diffH(s.dateD,s.heureD,s.dateF||s.dateD,s.heureF).toFixed(1)}h</td><td>${s.qualite}</td></tr>`).join('')}
+    </table>
+    <p style="margin-top:30px;color:#aaa;font-size:.8em;">Généré le ${fmtD(d)} par l'application Bébé TOUNKARA</p>
+  </body></html>`;
+  const win=window.open('','_blank');
+  win.document.write(html);win.document.close();
+  setTimeout(()=>win.print(),500);
 }
 
-/* ====================================================
-   INIT GLOBALE
-===================================================== */
+/* ============================================================
+   CHRONO TETEE
+============================================================ */
+let teteChroEn=null,teteChroInt=null;
+function toggleTeteChro(){
+  const btn=document.getElementById('teteChronoBtn');
+  if(!teteChroEn){teteChroEn=Date.now();btn.textContent='⏹️ Arrêter';
+    teteChroInt=setInterval(()=>{const s=Math.floor((Date.now()-teteChroEn)/1000);document.getElementById('teteTimer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},1000);
+  }else{clearInterval(teteChroInt);const s=Math.floor((Date.now()-teteChroEn)/1000);document.getElementById('teteTimer').textContent='00:00';teteChroEn=null;btn.textContent='▶️ Démarrer';
+    alert('Tétée terminée : '+Math.floor(s/60)+'min '+s%60+'s\nEnregistre-la dans l\'onglet 🍼 Tétées.');
+  }
+}
+
+/* ============================================================
+   INIT
+============================================================ */
 function initChamps(){
-  ['tDate','sDateD','sDateF','cDate','crDate','jDate'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value=todayStr();
-  });
-  ['tHeure','sHeureD','sHeureF','cHeure'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value=nowTime();
-  });
+  ['tDate','sDateD','sDateF','cDate','crDate','jDate'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=todayStr();});
+  ['tHeure','sHeureD','sHeureF','cHeure'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=nowTime();});
   document.getElementById('pNaissDate').value=DATA.naissDate;
   document.getElementById('pPoidsNaiss').value=DATA.poidsNaiss||'';
   document.getElementById('pTailleNaiss').value=DATA.tailleNaiss||'';
-  document.getElementById('pHeureNaiss').value=DATA.naissHeure||'04:30';
+  document.getElementById('pHeureNaiss').value=DATA.naissHeure||'';
 }
 async function render(){
-  initChamps(); majAccueil(); rendreTetees(); rendreSommeils(); rendreCouches();
-  rendreCroissance(); rendreVaccins(); rendreNotesVaccins(); rendreContacts();
-  await rendreJournal();
-  await rendreGalerie();
-  await afficherAvatar();
+  if(DATA.theme==='dark'){document.documentElement.setAttribute('data-theme','dark');document.querySelector('[onclick="toggleTheme()"]').textContent='☀️';}
+  initChamps();majAccueil();rendreTetees();rendreSommeils();rendreCouches();
+  rendreCroissance();rendreVaccins();rendreNotesVaccins();rendreContacts();
+  await rendreJournal();await rendreGalerie();await afficherAvatar();
 }
-
-window.addEventListener('resize',()=>{ if(document.getElementById('croissance').classList.contains('active')) dessinerGraphique(); });
-
-// Démarrage : ouvrir IndexedDB puis lancer l'app
-ouvrirDB().then(()=>{ render(); }).catch(e=>{ console.error('IndexedDB error',e); render(); });
-
-/* ====================================================
-   SERVICE WORKER
-===================================================== */
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
-  });
-}
+window.addEventListener('resize',()=>{if(document.getElementById('croissance').classList.contains('active'))dessinerGraphique();});
+ouvrirDB().then(()=>render()).catch(()=>render());
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 </script>
 </body>
 </html>

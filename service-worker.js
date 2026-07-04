@@ -1,7 +1,7 @@
 // Service Worker — permet à l'application de fonctionner hors ligne
 // une fois installée sur l'écran d'accueil.
 
-const CACHE_NAME = 'suivi-grossesse-cache-v1';
+const CACHE_NAME = 'suivi-bebe-cache-v4';
 const FICHIERS_A_METTRE_EN_CACHE = [
   './',
   './index.html',
